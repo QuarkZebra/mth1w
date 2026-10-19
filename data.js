@@ -206,7 +206,7 @@ const COURSE = {
   {name:"Linear Relations", days:[
     {d:32, iso:"2026-10-19", topic:"Rates of Change", num:"3.1",
       note:D("1J4IWaTzS8WyATpElDgKxXaDcVX2c94k0"),
-      ans:"", /* key: D("14-I6bLHE-BFyn96s3Ta2TVmtB2VW971G") */
+      ans:D("14-I6bLHE-BFyn96s3Ta2TVmtB2VW971G"), /* key: D("14-I6bLHE-BFyn96s3Ta2TVmtB2VW971G") */
       extras:[["EQAO Questions", D("1fCSC2pBe8ZXtXWXXoxGNo-WgaZRsrPAX"), "eqao"],
               ["Finding Rates from Word Descriptions", "https://www.youtube.com/watch?v=euUyBndYvcw", "vid"]]},
     {d:33, iso:"2026-10-20", topic:"Linear and Non-Linear Relations", num:"3.2",
