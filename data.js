@@ -211,7 +211,7 @@ const COURSE = {
               ["Finding Rates from Word Descriptions", "https://www.youtube.com/watch?v=euUyBndYvcw", "vid"]]},
     {d:33, iso:"2026-10-20", topic:"Linear and Non-Linear Relations", num:"3.2",
       note:D("1mk_Oys2hHn4PynS00i6DtLezlm50pdge"),
-      ans:"", /* key: D("12VjXYvY-6hun8pNKJllNare0JVIAZ607") */
+      ans:D("12VjXYvY-6hun8pNKJllNare0JVIAZ607"), /* key: D("12VjXYvY-6hun8pNKJllNare0JVIAZ607") */
       extras:[["EQAO Questions", D("15osF2FTEVbhVQP9kERHTvTYWN9U70-Bh"), "eqao"],
               ["Rate of Change and First Differences", "https://www.youtube.com/watch?v=DQgZ8M-NYgQ", "vid"]]},
     {d:34, iso:"2026-10-21", topic:"Connecting Representations", num:"3.3",
