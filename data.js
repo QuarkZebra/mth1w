@@ -216,7 +216,7 @@ const COURSE = {
               ["Rate of Change and First Differences", "https://www.youtube.com/watch?v=DQgZ8M-NYgQ", "vid"]]},
     {d:34, iso:"2026-10-21", topic:"Connecting Representations", num:"3.3",
       note:D("1r9kXTXwdcJAAr2d8kff2uYhM-gKjNCMJ"),
-      ans:"", /* key: D("1_bUWH3pr3YlipWzZxTu_Go9NxMQpDjyG") */
+      ans:D("1_bUWH3pr3YlipWzZxTu_Go9NxMQpDjyG"), /* key: D("1_bUWH3pr3YlipWzZxTu_Go9NxMQpDjyG") */
       extras:[["EQAO Questions", D("1-rsTT_qLLZexxYKmFTzWY4FDoFwHjUN0"), "eqao"],
               ["Tables, Graphs, Equations and Words", "https://www.youtube.com/watch?v=a2pobj3LK1k", "vid"]]},
     {d:35, iso:"2026-10-22", topic:"Current Topics  &  Like terms and Polynomial Operations", flag:"quiz",
