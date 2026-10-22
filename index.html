@@ -1426,7 +1426,7 @@ const THEME={
   S.drop=function(x,y,c,life,o){
     const g=pool.pop();if(!g)return;
     o=o||{};const w=o.w||5.2,h=o.h||w;
-    Object.assign(g,{x,y,born:S.now,life,vx:o.vx||0,vy:o.vy||0,w,h,rot:o.rot||0,grow:o.grow||0,sample:!o.burst&&!o.vx&&!o.vy});
+    Object.assign(g,{x,y,born:S.now,life,vx:o.vx||0,vy:o.vy||0,w,h,rot:o.rot||0,grow:o.grow||0,gy:o.gy||0,sample:!o.burst&&!o.vx&&!o.vy});
     g.el.setAttribute("rx",o.rx==null?Math.min(w,h)/2:o.rx);g.el.setAttribute("fill",c);
     live.push(g);
   };
@@ -1452,7 +1452,7 @@ const THEME={
     if(t!==tgt){
       tgt=t;tcol=t&&t.matches(".dlink,.xans,.ess a,.btn,.tgo")?getComputedStyle(t).color:"";
       S.kind=t?subject(t):"";S.entered=performance.now();
-      if(t&&THEME.enter)THEME.enter(S);
+      S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
       if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;THEME.burst(S)}   // a top-of-page control: the site's burst says hello
     }
   });
@@ -1486,7 +1486,7 @@ const THEME={
     for(let i=live.length-1;i>=0;i--){
       const g=live[i],age=now-g.born;
       if(age>g.life){g.el.style.opacity=0;live.splice(i,1);pool.push(g);continue}
-      const t=age/g.life;g.x+=g.vx;g.y+=g.vy;g.vx*=.9;g.vy*=.9;
+      const t=age/g.life;g.x+=g.vx;g.y+=g.vy;g.vy+=g.gy;g.vx*=.9;g.vy*=g.gy?.96:.9;
       const k=1+g.grow*t,w=g.w*k,h=g.h*k;
       g.el.setAttribute("x",g.x-w/2);g.el.setAttribute("y",g.y-h/2);g.el.setAttribute("width",w);g.el.setAttribute("height",h);
       if(g.rot)g.el.setAttribute("transform",`rotate(${g.rot+t*50} ${g.x} ${g.y})`);else g.el.removeAttribute("transform");
