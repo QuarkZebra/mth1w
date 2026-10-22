@@ -73,7 +73,7 @@ body.vc #vcur{display:block}
 #vcur .rg{stroke-width:1.6;opacity:.75}
 #vcur .tri{fill:none;stroke-width:1.4;stroke-dasharray:4 3;opacity:0}
 #vcur .hyp{stroke-width:1.8;stroke-linecap:round;opacity:0}
-#vcur .skull{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+#vcur .skull,#vcur .haz{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 .page.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both}
 @keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,3px)}40%,60%{transform:translate(6px,-2px)}}
 @media(hover:hover) and (pointer:fine){body.vc,body.vc *{cursor:none!important}body.vc input,body.vc textarea{cursor:auto!important}}
@@ -598,7 +598,7 @@ function renderEssentials(){
   el.innerHTML=list.map(e=>{
     const[t,url,kind,warn]=e;
     const a=`<a href="${esc(url)}" target="_blank" rel="noopener"${warn?' data-warn':''}>${ico(ICO[kind]||"arrow")}<span>${t}</span></a>`;
-    return warn?`<span class="tipwrap">${a}<span class="tip hazard">${ico("haz","haz")}<span>${esc(warn)}</span><button class="tgo" type="button">Continue</button></span></span>`:a;
+    return warn?`<span class="tipwrap">${a}<span class="tip hazard"><span>${esc(warn)}</span><button class="tgo" type="button">Continue</button></span></span>`:a;
   }).join("");
 }
 
@@ -1345,14 +1345,17 @@ if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
    the link's colour, with a short readout for the unit: (x, y) on
    y = 2x + 1, a radius and area, a percent, x² + bx + c, a tally, or
    simple interest. Over an answer key the pointer becomes a red skull
-   and crossbones and the page shakes. */
+   and crossbones and the page shakes; over a hazard-warned pill (the
+   calculator list) it becomes the warning triangle. */
 const THEME={
   samples:true,
   subject(name){return /number/i.test(name)?"num":/algebra/i.test(name)?"alg":/relation/i.test(name)?"lin":/data/i.test(name)?"data":/geometry|measurement/i.test(name)?"geo":/financial/i.test(name)?"fin":""},
   init(S){
     const cs=getComputedStyle(document.documentElement);
     S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;S.bgN=0;
-    S.e={tri:S.el("path","tri"),hyp:S.el("line","hyp"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull")};
+    S.e={tri:S.el("path","tri"),hyp:S.el("line","hyp"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull"),haz:S.el("g","haz")};
+    const hz=S.e.haz,mh=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);hz.appendChild(el);return el};
+    S.hz={tri:mh("path",{d:"M0 -11.5L12 9.5H-12Z","stroke-linejoin":"round","stroke-width":3}),bar:mh("rect",{x:-1.5,y:-4,width:3,height:7.5,rx:1.2}),dot:mh("circle",{cx:0,cy:6.3,r:1.7})};
     /* the skull and crossbones: bones behind, head and jaw in front, the holes in the page colour */
     const k=S.e.skull,mk=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);k.appendChild(el);return el};
     S.sk={bones:[mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(45)"}),mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(-45)"})],
@@ -1364,7 +1367,7 @@ const THEME={
   enter(S){
     /* landing on an answer key shakes the page, the way MHF4U's bomb does */
     const t=S.tgt;if(!t||t.closest("header"))return;
-    if(t.matches('[data-warn],.dlink.ans,.xans,.ansb')||t.querySelector('[data-warn]')){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}
+    if(t.matches('.dlink.ans,.xans,.btn[data-warn]')){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}
   },
   sampleColor(S){return S.on?S.c:S.confetti[S.ci++%S.confetti.length]},
   sample(){return{w:4.6}},
@@ -1374,16 +1377,20 @@ const THEME={
   },
   frame(S){
     const e=S.e,{mx,my,c,sp}=S,G=20,m=s=>s.replace("-","−"),q=Math.min(sp,30);
-    if(!S.bgN--){S.bgN=60;const cs=getComputedStyle(document.documentElement);S.bg=cs.getPropertyValue("--bg").trim();S.red=cs.getPropertyValue("--ans").trim()||"#cc3344"}
-    const t=S.tgt,onAns=!!(S.on&&t&&(t.matches('[data-warn],.dlink.ans,.xans,.ansb')||t.querySelector('[data-warn]')));
+    if(!S.bgN--){S.bgN=60;const cs=getComputedStyle(document.documentElement);S.bg=cs.getPropertyValue("--bg").trim();S.red=cs.getPropertyValue("--ans").trim()||"#cc3344";S.hazc=cs.getPropertyValue("--haz-fg").trim()||"#9a5a00"}
+    const t=S.tgt,onAns=!!(S.on&&t&&t.matches('.dlink.ans,.xans,.btn[data-warn]')),onHaz=!!(S.on&&t&&t.matches('.ess a[data-warn]'));
     /* the skull over an answer key; otherwise the dot and ring, reverse contrast on a link */
     if(onAns){
       e.skull.setAttribute("transform",`translate(${mx} ${my}) scale(1.15)`);e.skull.style.opacity=1;
       [...S.sk.bones,...S.sk.knobs,S.sk.head,S.sk.jaw].forEach(el=>el.setAttribute("fill",S.red));
       S.sk.holes.forEach(el=>el.setAttribute("fill",S.bg));
-      e.pt.style.opacity=0;e.rg.style.opacity=0;
+      e.pt.style.opacity=0;e.rg.style.opacity=0;e.haz.style.opacity=0;
+    }else if(onHaz){
+      e.haz.setAttribute("transform",`translate(${mx} ${my})`);e.haz.style.opacity=1;
+      S.hz.tri.setAttribute("fill",S.hazc);S.hz.tri.setAttribute("stroke",S.hazc);S.hz.bar.setAttribute("fill",S.bg);S.hz.dot.setAttribute("fill",S.bg);
+      e.pt.style.opacity=0;e.rg.style.opacity=0;e.skull.style.opacity=0;
     }else{
-      e.skull.style.opacity=0;
+      e.skull.style.opacity=0;e.haz.style.opacity=0;
       e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.style.opacity=1;
       e.rg.setAttribute("cx",mx);e.rg.setAttribute("cy",my);e.rg.setAttribute("rx",10+q*.4);e.rg.setAttribute("ry",Math.max(5,10-q*.15));
       e.rg.setAttribute("transform",`rotate(${S.ang*180/Math.PI} ${mx} ${my})`);e.rg.setAttribute("stroke",c);e.rg.style.opacity=.75;
@@ -1396,7 +1403,7 @@ const THEME={
       e.hyp.setAttribute("x1",A.x);e.hyp.setAttribute("y1",A.y);e.hyp.setAttribute("x2",mx);e.hyp.setAttribute("y2",my);e.hyp.setAttribute("stroke",c);e.hyp.style.opacity=S.fast*.85;
       S.label=run===0?"rise/run: straight up!":`rise/run = ${m(String(rise))}/${m(String(run))}`;S.labelOp=S.fast;
     }else{e.tri.style.opacity=0;e.hyp.style.opacity=0}
-    if(!(S.on&&S.kind&&S.rect)||onAns)return;
+    if(!(S.on&&S.kind&&S.rect)||onAns||onHaz)return;
     /* the readout for the unit, nothing drawn */
     const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),lo=(S.boost-.5)*2;
     if(S.boost<=.5)return;
