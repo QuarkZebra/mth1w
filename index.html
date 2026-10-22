@@ -68,15 +68,14 @@ body.vc #vcur{display:block}
 #vcur.on{opacity:1}
 #vcur.hid{opacity:0}
 #vcur .lbl{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;transition:opacity .15s}
-#vcur .pt{stroke:var(--bg);stroke-width:1.5;transition:transform .12s;transform-origin:center;transform-box:fill-box}
+#vcur .pt{stroke-width:1.8;transition:transform .12s;transform-origin:center;transform-box:fill-box}
 #vcur.dn .pt{transform:scale(1.5)}
-#vcur .rg{fill:none;stroke-width:1.6;opacity:.75}
+#vcur .rg{stroke-width:1.6;opacity:.75}
 #vcur .tri{fill:none;stroke-width:1.4;stroke-dasharray:4 3;opacity:0}
-#vcur .hyp,#vcur .fline{stroke-width:1.8;stroke-linecap:round;opacity:0}
-#vcur .nl,#vcur .tally{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:0}
-#vcur .circ{fill:none;stroke-width:1.5;stroke-dasharray:4 3;opacity:0}
-#vcur .fdot{stroke:var(--bg);stroke-width:1.2;opacity:0}
-#vcur .tile{stroke:var(--bg);stroke-width:1;opacity:0}
+#vcur .hyp{stroke-width:1.8;stroke-linecap:round;opacity:0}
+#vcur .skull{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.page.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,3px)}40%,60%{transform:translate(6px,-2px)}}
 @media(hover:hover) and (pointer:fine){body.vc,body.vc *{cursor:none!important}body.vc input,body.vc textarea{cursor:auto!important}}
 .page{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 4rem;position:relative;z-index:1}
 
@@ -453,7 +452,7 @@ function ico(name,cls){
 }
 
 /* ══════════ Link rendering ══════════ */
-const WARN=ico("skull","skull")+'<span>Do not look if you haven’t done the practice</span><button class="tgo" type="button">Continue</button>';
+const WARN='<span>Do not look if you haven’t done the practice</span><button class="tgo" type="button">Continue</button>';
 function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;")}
 function live(t,url,cls,icon,warn){
   const a=`<a class="dlink ${cls}" href="${esc(url)}" target="_blank" rel="noopener"${warn?' data-warn':''}>${ico(icon)}<span class="lt">${t}</span></a>`;
@@ -1341,19 +1340,31 @@ if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
    A dot with a ring that squashes and stretches with speed, leaving a
    confetti trail of samples in the site's colours. Move fast and a
    rise-over-run triangle appears from where you started. Stop hard after
-   a fast run and algebra tiles scatter. Over a link the link plays its
-   unit: a line with your (x, y) on it, a circle whose radius is your
-   distance from the centre, a number line reading a percent, algebra
-   tiles building x² + bx + c, tally marks counting as you cross, or
-   savings growing by the year. */
+   a fast run and algebra tiles scatter. Over a link the dot stays the
+   same size and flips to reverse contrast (hollow dot, filled ring) in
+   the link's colour, with a short readout for the unit: (x, y) on
+   y = 2x + 1, a radius and area, a percent, x² + bx + c, a tally, or
+   simple interest. Over an answer key the pointer becomes a red skull
+   and crossbones and the page shakes. */
 const THEME={
   samples:true,
   subject(name){return /number/i.test(name)?"num":/algebra/i.test(name)?"alg":/relation/i.test(name)?"lin":/data/i.test(name)?"data":/geometry|measurement/i.test(name)?"geo":/financial/i.test(name)?"fin":""},
   init(S){
     const cs=getComputedStyle(document.documentElement);
-    S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;
-    S.e={tri:S.el("path","tri"),hyp:S.el("line","hyp"),fline:S.el("line","fline"),nl:S.el("path","nl"),tally:S.el("path","tally"),circ:S.el("circle","circ"),fdot:S.el("circle","fdot",{r:3.2}),tiles:[],rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5})};
-    for(let i=0;i<12;i++)S.e.tiles.push(S.el("rect","tile"));
+    S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;S.bgN=0;
+    S.e={tri:S.el("path","tri"),hyp:S.el("line","hyp"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull")};
+    /* the skull and crossbones: bones behind, head and jaw in front, the holes in the page colour */
+    const k=S.e.skull,mk=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);k.appendChild(el);return el};
+    S.sk={bones:[mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(45)"}),mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(-45)"})],
+          knobs:[[-9.2,-9.2],[9.2,9.2],[-9.2,9.2],[9.2,-9.2]].map(([x,y])=>mk("circle",{cx:x,cy:y,r:2.4})),
+          head:mk("circle",{cx:0,cy:-2.2,r:7.2}),jaw:mk("rect",{x:-4.4,y:2.6,width:8.8,height:5.2,rx:1.6}),
+          holes:[mk("circle",{cx:-2.7,cy:-3,r:2}),mk("circle",{cx:2.7,cy:-3,r:2}),mk("path",{d:"M0 0.2L-1.2 2.2H1.2Z"}),
+                 mk("rect",{x:-3.2,y:4.6,width:1.1,height:2.4}),mk("rect",{x:-.55,y:4.6,width:1.1,height:2.4}),mk("rect",{x:2.1,y:4.6,width:1.1,height:2.4})]};
+  },
+  enter(S){
+    /* landing on an answer key shakes the page, the way MHF4U's bomb does */
+    const t=S.tgt;if(!t||t.closest("header"))return;
+    if(t.matches('[data-warn],.dlink.ans,.xans,.ansb')||t.querySelector('[data-warn]')){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}
   },
   sampleColor(S){return S.on?S.c:S.confetti[S.ci++%S.confetti.length]},
   sample(){return{w:4.6}},
@@ -1362,46 +1373,40 @@ const THEME={
     for(let i=0;i<4;i++){const a=Math.random()*6.283,v=2+Math.random()*3;S.drop(S.mx,S.my,S.c,850,{vx:Math.cos(a)*v,vy:Math.sin(a)*v,burst:true,w:4,h:14,rx:1,rot:Math.random()*90})}
   },
   frame(S){
-    const e=S.e,{mx,my,c,boost,sp}=S,G=20,m=s=>s.replace("-","−"),q=Math.min(sp,30);
-    e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.setAttribute("r",4.5+2*boost);e.pt.setAttribute("fill",c);
-    e.rg.setAttribute("cx",mx);e.rg.setAttribute("cy",my);e.rg.setAttribute("rx",10+7*boost+q*.4);e.rg.setAttribute("ry",Math.max(5,10+7*boost-q*.15));
-    e.rg.setAttribute("transform",`rotate(${S.ang*180/Math.PI} ${mx} ${my})`);e.rg.setAttribute("stroke",c);
+    const e=S.e,{mx,my,c,sp}=S,G=20,m=s=>s.replace("-","−"),q=Math.min(sp,30);
+    if(!S.bgN--){S.bgN=60;const cs=getComputedStyle(document.documentElement);S.bg=cs.getPropertyValue("--bg").trim();S.red=cs.getPropertyValue("--ans").trim()||"#cc3344"}
+    const t=S.tgt,onAns=!!(S.on&&t&&(t.matches('[data-warn],.dlink.ans,.xans,.ansb')||t.querySelector('[data-warn]')));
+    /* the skull over an answer key; otherwise the dot and ring, reverse contrast on a link */
+    if(onAns){
+      e.skull.setAttribute("transform",`translate(${mx} ${my}) scale(1.15)`);e.skull.style.opacity=1;
+      [...S.sk.bones,...S.sk.knobs,S.sk.head,S.sk.jaw].forEach(el=>el.setAttribute("fill",S.red));
+      S.sk.holes.forEach(el=>el.setAttribute("fill",S.bg));
+      e.pt.style.opacity=0;e.rg.style.opacity=0;
+    }else{
+      e.skull.style.opacity=0;
+      e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.style.opacity=1;
+      e.rg.setAttribute("cx",mx);e.rg.setAttribute("cy",my);e.rg.setAttribute("rx",10+q*.4);e.rg.setAttribute("ry",Math.max(5,10-q*.15));
+      e.rg.setAttribute("transform",`rotate(${S.ang*180/Math.PI} ${mx} ${my})`);e.rg.setAttribute("stroke",c);e.rg.style.opacity=.75;
+      if(S.on){e.pt.setAttribute("fill",S.bg);e.pt.setAttribute("stroke",c);e.rg.setAttribute("fill",c);e.rg.setAttribute("fill-opacity",.28)}
+      else{e.pt.setAttribute("fill",c);e.pt.setAttribute("stroke",S.bg);e.rg.setAttribute("fill","none")}
+    }
     if(S.fast>0&&S.samples.length>=6){
       const A=S.samples[0],run=Math.round((mx-A.x)/G),rise=Math.round((A.y-my)/G);
       e.tri.setAttribute("d",`M${A.x} ${A.y}H${mx}V${my}`);e.tri.setAttribute("stroke",c);e.tri.style.opacity=S.fast*.8;
       e.hyp.setAttribute("x1",A.x);e.hyp.setAttribute("y1",A.y);e.hyp.setAttribute("x2",mx);e.hyp.setAttribute("y2",my);e.hyp.setAttribute("stroke",c);e.hyp.style.opacity=S.fast*.85;
       S.label=run===0?"rise/run: straight up!":`rise/run = ${m(String(rise))}/${m(String(run))}`;S.labelOp=S.fast;
     }else{e.tri.style.opacity=0;e.hyp.style.opacity=0}
-    ["fline","nl","tally","circ","fdot"].forEach(k=>e[k].style.opacity=0);e.tiles.forEach(t=>t.style.opacity=0);
-    if(!(S.on&&S.kind&&S.rect))return;
-    const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),yb=r.bottom+6,lo=(boost-.5)*2;
-    if(S.kind==="lin"){
-      const h=12+5*boost;e.fline.setAttribute("x1",r.left-6);e.fline.setAttribute("y1",yb+h);e.fline.setAttribute("x2",r.right+6);e.fline.setAttribute("y2",yb);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.9;
-      e.fdot.setAttribute("cx",mx);e.fdot.setAttribute("cy",yb+h-(mx-r.left+6)/(r.width+12)*h);e.fdot.setAttribute("fill",c);e.fdot.style.opacity=boost;
-      const x=Math.round(u*8);if(boost>.5){S.label=`y = 2x + 1 → (${x}, ${2*x+1})`;S.labelOp=lo}
-    }else if(S.kind==="geo"){
-      const rad=Math.hypot(mx-c0,my-cy);e.circ.setAttribute("cx",c0);e.circ.setAttribute("cy",cy);e.circ.setAttribute("r",rad);e.circ.setAttribute("stroke",c);e.circ.style.opacity=boost*.8;
-      e.fline.setAttribute("x1",c0);e.fline.setAttribute("y1",cy);e.fline.setAttribute("x2",mx);e.fline.setAttribute("y2",my);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.6;
-      const R=rad/G;if(boost>.5){S.label=`r = ${R.toFixed(1)}  A = πr² ≈ ${(Math.PI*R*R).toFixed(1)}`;S.labelOp=lo}
-    }else if(S.kind==="num"){
-      let d=`M${r.left} ${yb+6}H${r.right}`;for(let i=0;i<=4;i++){const x=r.left+r.width*i/4;d+=`M${x} ${yb+2}V${yb+10}`}
-      e.nl.setAttribute("d",d);e.nl.setAttribute("stroke",c);e.nl.style.opacity=boost*.8;
-      e.fdot.setAttribute("cx",mx);e.fdot.setAttribute("cy",yb+6);e.fdot.setAttribute("fill",c);e.fdot.style.opacity=boost;
-      if(boost>.5){S.label=`${u.toFixed(2)} = ${Math.round(u*100)}%`;S.labelOp=lo}
-    }else if(S.kind==="alg"){
-      const k=1+Math.floor(u*3.99),n=1+Math.floor(u*5.99);let x=r.left,i=0;
-      const put=(w,h)=>{const t=e.tiles[i++];if(!t)return;t.setAttribute("x",x);t.setAttribute("y",yb+14-h);t.setAttribute("width",w);t.setAttribute("height",h);t.setAttribute("fill",c);t.style.opacity=boost*.8;x+=w+2};
-      put(14,14);for(let j=0;j<k;j++)put(4,14);for(let j=0;j<n;j++)put(4,4);
-      if(boost>.5){S.label=`x² + ${k}x + ${n}`;S.labelOp=lo}
-    }else if(S.kind==="data"){
-      const n=1+Math.floor(u*11.99);let d="",x=r.left;
-      for(let i=1;i<=n;i++){if(i%5===0){d+=`M${x-22} ${yb+12}L${x+2} ${yb+2}`;x+=8}else{d+=`M${x} ${yb+2}V${yb+12}`;x+=5}}
-      e.tally.setAttribute("d",d);e.tally.setAttribute("stroke",c);e.tally.style.opacity=boost*.9;
-      if(boost>.5){S.label=`tally: ${n}`;S.labelOp=lo}
-    }else if(S.kind==="fin"){
-      const t=Math.round(u*10);e.fline.setAttribute("x1",r.left);e.fline.setAttribute("y1",yb+4);e.fline.setAttribute("x2",r.left+r.width*u);e.fline.setAttribute("y2",yb+4);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.9;
-      if(boost>.5){S.label=`$1000 at 5% for ${t} y → $${1000+50*t}`;S.labelOp=lo}
-    }
+    if(!(S.on&&S.kind&&S.rect)||onAns)return;
+    /* the readout for the unit, nothing drawn */
+    const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),lo=(S.boost-.5)*2;
+    if(S.boost<=.5)return;
+    if(S.kind==="lin"){const x=Math.round(u*8);S.label=`y = 2x + 1 → (${x}, ${2*x+1})`}
+    else if(S.kind==="geo"){const R=Math.hypot(mx-c0,my-cy)/G;S.label=`r = ${R.toFixed(1)}  A = πr² ≈ ${(Math.PI*R*R).toFixed(1)}`}
+    else if(S.kind==="num")S.label=`${u.toFixed(2)} = ${Math.round(u*100)}%`;
+    else if(S.kind==="alg"){const k=1+Math.floor(u*3.99),n=1+Math.floor(u*5.99);S.label=`x² + ${k}x + ${n}`}
+    else if(S.kind==="data")S.label=`tally: ${1+Math.floor(u*11.99)}`;
+    else if(S.kind==="fin"){const t=Math.round(u*10);S.label=`$1000 at 5% for ${t} y → $${1000+50*t}`}
+    S.labelOp=lo;
   }
 };
 
