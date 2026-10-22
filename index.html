@@ -1420,14 +1420,15 @@ const THEME={
   const gwrap=Q(".ghosts"),txt=Q(".lbl");
   const SEL='a,button,[role="link"],.dlink.pend,.tipwrap',FAST=14;
   const pool=[],live=[];
-  for(let i=0;i<96;i++){const r=document.createElementNS(NS,"rect");r.style.opacity=0;gwrap.appendChild(r);pool.push({el:r})}
+  for(let i=0;i<180;i++){const r=document.createElementNS(NS,"rect");r.style.opacity=0;gwrap.appendChild(r);pool.push({el:r})}
   const S={mx:-100,my:-100,vx:0,vy:0,sp:0,ang:-2.3,fast:0,boost:0,on:false,rect:null,kind:"",c:"",now:0,samples:[],label:"",layer:Q(".theme"),NS};
-  /* o: {vx,vy,w,h,rx,rot,grow,burst} */
+  /* o: {vx,vy,w,h,rx,rot,grow,gy,drag,op,tw,streak,burst} — streak orients the
+     particle along its velocity with a length that follows its speed */
   S.drop=function(x,y,c,life,o){
     const g=pool.pop();if(!g)return;
     o=o||{};const w=o.w||5.2,h=o.h||w;
-    Object.assign(g,{x,y,born:S.now,life,vx:o.vx||0,vy:o.vy||0,w,h,rot:o.rot||0,grow:o.grow||0,gy:o.gy||0,sample:!o.burst&&!o.vx&&!o.vy});
-    g.el.setAttribute("rx",o.rx==null?Math.min(w,h)/2:o.rx);g.el.setAttribute("fill",c);
+    Object.assign(g,{x,y,born:S.now,life,vx:o.vx||0,vy:o.vy||0,w,h,rot:o.rot||0,grow:o.grow||0,gy:o.gy||0,drag:o.drag||(o.gy?.96:.9),op:o.op||.7,tw:o.tw?Math.random()*6.28:0,streak:o.streak||0,sample:!o.burst&&!o.vx&&!o.vy});
+    g.round=o.rx==null;g.el.setAttribute("rx",g.round?Math.min(w,h)/2:o.rx);g.el.setAttribute("fill",c);
     live.push(g);
   };
   S.gauss=()=>{let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s-3)/Math.SQRT1_2};
@@ -1452,6 +1453,7 @@ const THEME={
     if(t!==tgt){
       tgt=t;tcol=t&&t.matches(".dlink,.xans,.ess a,.btn,.tgo")?getComputedStyle(t).color:"";
       S.kind=t?subject(t):"";S.entered=performance.now();
+      S.mx=e.clientX;S.my=e.clientY;S.now=performance.now();   // the pointer may have jumped here before its move event
       S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
       if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;THEME.burst(S)}   // a top-of-page control: the site's burst says hello
     }
@@ -1486,11 +1488,13 @@ const THEME={
     for(let i=live.length-1;i>=0;i--){
       const g=live[i],age=now-g.born;
       if(age>g.life){g.el.style.opacity=0;live.splice(i,1);pool.push(g);continue}
-      const t=age/g.life;g.x+=g.vx;g.y+=g.vy;g.vy+=g.gy;g.vx*=.9;g.vy*=g.gy?.96:.9;
-      const k=1+g.grow*t,w=g.w*k,h=g.h*k;
+      const t=age/g.life;g.x+=g.vx;g.y+=g.vy;g.vy+=g.gy;g.vx*=g.drag;g.vy*=g.drag;
+      const k=1+g.grow*t,sp=Math.hypot(g.vx,g.vy),w=g.streak?Math.max(g.w,sp*g.streak):g.w*k,h=g.h*(g.streak?1:k);
       g.el.setAttribute("x",g.x-w/2);g.el.setAttribute("y",g.y-h/2);g.el.setAttribute("width",w);g.el.setAttribute("height",h);
-      if(g.rot)g.el.setAttribute("transform",`rotate(${g.rot+t*50} ${g.x} ${g.y})`);else g.el.removeAttribute("transform");
-      g.el.style.opacity=(1-t)*.7;
+      if(g.round&&g.grow)g.el.setAttribute("rx",Math.min(w,h)/2);   /* growing blobs stay round */
+      if(g.streak)g.el.setAttribute("transform",`rotate(${Math.atan2(g.vy,g.vx)*57.3} ${g.x} ${g.y})`);
+      else if(g.rot)g.el.setAttribute("transform",`rotate(${g.rot+t*50} ${g.x} ${g.y})`);else g.el.removeAttribute("transform");
+      g.el.style.opacity=(1-t)*g.op*(g.tw?.55+.45*Math.abs(Math.sin(age*.025+g.tw)):1);
       if(g.sample)S.samples.unshift(g);   // oldest first
     }
     S.hide=hide;S.label="";S.labelAt=null;S.labelOp=null;S.labelColor=null;
