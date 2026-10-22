@@ -49,20 +49,34 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--bg)}
 body{font-family:var(--sans);color:var(--ink);line-height:1.6;min-height:100vh;
-  background-image:radial-gradient(1000px 520px at 82% -8%,var(--accent-dim),transparent 70%);
+  background-image:radial-gradient(1000px 520px at 82% -8%,var(--accent-dim),transparent 70%),
+    radial-gradient(900px 640px at -6% 104%,rgba(var(--pal-vi),.07),transparent 70%);
   background-repeat:no-repeat;background-attachment:fixed;transition:background .3s,color .3s}
 a{color:inherit;text-decoration:none}
 #bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;animation:fadein 1.4s both}
+/* Aurora: four blurred colour blobs breathing behind the canvas */
+#aurora{position:fixed;inset:-25%;z-index:0;pointer-events:none;filter:blur(70px);opacity:var(--aur);
+  background:radial-gradient(38% 42% at 22% 28%,rgba(var(--pal-sk),.5),transparent 70%),
+    radial-gradient(34% 36% at 78% 22%,rgba(var(--pal-vi),.45),transparent 70%),
+    radial-gradient(40% 38% at 72% 82%,rgba(var(--pal-co),.36),transparent 70%),
+    radial-gradient(30% 32% at 18% 86%,rgba(var(--pal-am),.3),transparent 70%);
+  animation:aurora 52s ease-in-out infinite alternate;translate:var(--ax,0) var(--ay,0);transition:opacity .3s,translate .7s ease-out}
+@keyframes aurora{0%{transform:translate(0,0) rotate(0deg) scale(1)}50%{transform:translate(4%,-3%) rotate(7deg) scale(1.08)}100%{transform:translate(-3%,3%) rotate(-6deg) scale(1.04)}}
 /* The cursor (see the script at the end): an SVG overlay above everything */
 #vcur{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:1000;pointer-events:none;overflow:visible;display:none;opacity:0;transition:opacity .2s}
 body.vc #vcur{display:block}
 #vcur.on{opacity:1}
 #vcur.hid{opacity:0}
 #vcur .lbl{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;transition:opacity .15s}
-#vcur .pt{stroke:var(--bg);stroke-width:1.2;transition:transform .12s;transform-origin:center;transform-box:fill-box}
+#vcur .pt{stroke:var(--bg);stroke-width:1.5;transition:transform .12s;transform-origin:center;transform-box:fill-box}
 #vcur.dn .pt{transform:scale(1.5)}
-#vcur .tailh{stroke:var(--bg);stroke-width:5;stroke-linecap:round;opacity:.8}
-#vcur .tail{stroke-linecap:round}
+#vcur .rg{fill:none;stroke-width:1.6;opacity:.75}
+#vcur .tri{fill:none;stroke-width:1.4;stroke-dasharray:4 3;opacity:0}
+#vcur .hyp,#vcur .fline{stroke-width:1.8;stroke-linecap:round;opacity:0}
+#vcur .nl,#vcur .tally{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:0}
+#vcur .circ{fill:none;stroke-width:1.5;stroke-dasharray:4 3;opacity:0}
+#vcur .fdot{stroke:var(--bg);stroke-width:1.2;opacity:0}
+#vcur .tile{stroke:var(--bg);stroke-width:1;opacity:0}
 @media(hover:hover) and (pointer:fine){body.vc,body.vc *{cursor:none!important}body.vc input,body.vc textarea{cursor:auto!important}}
 .page{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 4rem;position:relative;z-index:1}
 
@@ -285,7 +299,7 @@ body.armed .fab{opacity:0;visibility:hidden;pointer-events:none;transform:transl
 @media(max-width:768px){
   .page{padding:2rem .75rem}header h1{font-size:1.9rem}
   .top-bar{margin:-2rem -.75rem 1.5rem;padding:.5rem .75rem}
-  #bg{opacity:.6}
+  #bg{opacity:.6}#aurora{opacity:calc(var(--aur)*.6)}
   .urange{display:none}
   .fab{bottom:1rem;right:1rem}
   .uhead{padding:.8rem .9rem;gap:.5rem;flex-wrap:wrap}
@@ -321,6 +335,7 @@ body.armed .fab{opacity:0;visibility:hidden;pointer-events:none;transform:transl
 </style>
 </head>
 <body>
+<div id="aurora" aria-hidden="true"></div>
 <canvas id="bg" aria-hidden="true"></canvas>
 <svg id="vcur" aria-hidden="true"><g class="ghosts"></g><g class="theme"></g><text class="lbl"></text></svg>
 <div class="page">
@@ -744,31 +759,179 @@ dmBtn.addEventListener("click",()=>{
 });
 render();renderEssentials();renderHero();syncBtn();
 
-/* ══════════ Animated background: pseudocode on graph paper ══════════
-   EQAO-register pseudocode snippets type themselves out slowly on
-   faint graph paper, pause, print their output, hold, and fade.
-   Every output is correct, every snippet is Grade 9 mathematics.
-   Calm by design: no cursor-chasing, no click effects, slow pace.
-   Reduced-motion users get a static drawing instead. */
-const cv=document.getElementById("bg"),cx=cv.getContext("2d");
-let W,H,DPR,RGB="2,132,199",ALPHA=.1,MX=-1e4,MY=-1e4;
-if(window.matchMedia("(hover:hover) and (pointer:fine)").matches){
-  document.addEventListener("mousemove",e=>{MX=e.clientX;MY=e.clientY},{passive:true});
-  document.documentElement.addEventListener("mouseleave",()=>{MX=MY=-1e4});
+/* ══════════ Shared function vignettes ══════════
+   Used by more than one site; each site's kinds file lists which it wants
+   and in which colours. Every maker fits its box; every drawer takes
+   (v, p, f, hold, age): p = 0..1 through the build, f = fade, hold = ms
+   since the build finished, age = ms since birth. */
+/* a parent function morphing into a f(k(x − d)) + c, parameters shown */
+function makeTransform(v){
+  const parents=[["x²",x=>x*x],["√x",x=>x<0?NaN:Math.sqrt(x)],["|x|",x=>Math.abs(x)],["x³",x=>x*x*x/3]];
+  const i=Math.floor(rnd(0,parents.length));
+  Object.assign(v,{pname:parents[i][0],pf:parents[i][1],pa:rnd(0,6.28),pb:rnd(0,6.28)});
 }
-const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const MONO="13px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";
-function bgColors(){
-  const s=getComputedStyle(document.documentElement);
-  RGB=(s.getPropertyValue("--curve")||RGB).trim();
-  ALPHA=parseFloat(s.getPropertyValue("--curve-a"))||ALPHA;
+function drawTransform(v,p,f,hold){
+  const [c0,c1]=v.c,{px,py}=frame(v,f,c0,4,4);
+  const t=p<1?easeIO((p-.2)/.8):1,s=hold*.0005;
+  const a=1+(t*(.9*Math.sin(s+v.pa))),d=t*1.6*Math.sin(s*.7+v.pb),c=t*1.4*Math.cos(s*.9+v.pa),k=1+t*.5*Math.sin(s*1.3);
+  cx.save();cx.beginPath();cx.rect(v.x,v.y,v.w,v.h);cx.clip();
+  cx.strokeStyle=col(c0,ALPHA*1.8*f);cx.lineWidth=1.4;cx.setLineDash([3,4]);trace(v.pf,px,py,4,-4);cx.setLineDash([]);
+  cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2.2;trace(x=>a*v.pf(k*(x-d))+c,px,py,4,-4);
+  cx.restore();
+  label("y = "+v.pname,v.x+4,v.y+12,f,c0);
+  if(t>0)label(`a = ${a.toFixed(1)}  k = ${k.toFixed(1)}  d = ${neg(d.toFixed(1))}  c = ${neg(c.toFixed(1))}`,v.x+4,v.y+v.h+2,f*t,c1);
 }
-function sizeBg(){
-  DPR=Math.min(window.devicePixelRatio||1,2);
-  W=window.innerWidth;H=window.innerHeight;
-  cv.width=W*DPR;cv.height=H*DPR;
-  cx.setTransform(DPR,0,0,DPR,0,0);
+/* the unit circle generating the sine wave; v.deg picks degrees or radians */
+function makeCircle(v){v.R=Math.min(v.h/2-16,v.w*.2);v.cx0=v.x+v.R+14;v.cy0=v.y+v.h/2}
+function drawCircle(v,p,f,hold,age){
+  const [c0,c1]=v.c,R=v.R,X=v.cx0,Y=v.cy0,x0=X+R+16,wl=v.x+v.w-x0-6;
+  ring(X,Y,R,col(c0,LINE(f)),1.6);
+  cx.strokeStyle=col(c0,ALPHA*1.4*f);cx.lineWidth=1;seg([X-R-6,Y],[X+R+6,Y]);seg([X,Y-R-6],[X,Y+R+6]);
+  seg([x0,Y],[x0+wl,Y]);
+  const T=(age-T_IN*.4)/7000;if(T<0)return;
+  const th=(T%1)*6.283,lap=Math.floor(T),upto=lap>0?1:T%1;
+  const Px=X+R*Math.cos(th),Py=Y-R*Math.sin(th);
+  cx.strokeStyle=col(c0,LINE(f));cx.lineWidth=1.6;seg([X,Y],[Px,Py]);
+  cx.setLineDash([2,4]);cx.strokeStyle=col(c1,ALPHA*1.8*f);seg([Px,Py],[x0+wl*(T%1),Py]);cx.setLineDash([]);
+  cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;cx.beginPath();
+  for(let i=0;i<=80;i++){const u=upto*i/80;const X2=x0+wl*u,Y2=Y-R*Math.sin(u*6.283);i?cx.lineTo(X2,Y2):cx.moveTo(X2,Y2)}cx.stroke();
+  dot(Px,Py,3.4,col(c0,BOLD(f)));dot(x0+wl*(T%1),Py,3.4,col(c1,BOLD(f)));
+  const marks=v.deg?["90°","180°","270°","360°"]:["π/2","π","3π/2","2π"];
+  marks.forEach((m,i)=>text(m,x0+wl*(i+1)/4,Y+R+14,f,c1,9));
+  label(v.deg?`θ = ${Math.round(th*57.2958)}°`:`θ = ${(th).toFixed(2)} rad`,X-R,v.y+12,f,c0);
+  label("y = sin θ",x0+wl-66,v.y+12,f,c1);
 }
+/* y = a sin(k(x − d)) + c with the parameters breathing; degrees or radians */
+function makeSinusoid(v){v.ph=rnd(0,6.28)}
+function drawSinusoid(v,p,f,hold){
+  const [c0,c1]=v.c,{px,py}=frame(v,f,c0,v.deg?540:9.42,2.6);
+  const t=p<1?easeO((p-.3)/.5):1,s=hold*.0005+v.ph;
+  const a=1+t*.8*Math.sin(s),k=1+t*.5*Math.sin(s*.7+1),d=t*(v.deg?60:1)*Math.sin(s*.4),c=t*.6*Math.cos(s*.9);
+  const per=v.deg?360:6.283;
+  cx.strokeStyle=col(c0,ALPHA*1.8*f);cx.lineWidth=1.3;cx.setLineDash([3,4]);
+  trace(x=>Math.sin(x/per*6.283),px,py,v.deg?540:9.42,v.deg?-540:-9.42);cx.setLineDash([]);
+  cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2.2;
+  trace(x=>a*Math.sin(k*(x-d)/per*6.283)+c,px,py,v.deg?540:9.42,v.deg?-540:-9.42,140);
+  label("y = sin x",v.x+4,v.y+12,f,c0);
+  if(t>0)label(`amplitude ${Math.abs(a).toFixed(1)}  period ${v.deg?Math.round(360/k)+"°":(6.283/k).toFixed(1)}`,v.x+4,v.y+v.h+2,f*t,c1);
+}
+/* a function and its inverse, reflected in y = x, with a point and its mirror */
+function makeInverse(v){
+  const fs=[["2ˣ",x=>Math.pow(2,x),x=>Math.log2(x)],["x³",x=>x*x*x/4,x=>Math.cbrt(4*x)],["√x",x=>x<0?NaN:Math.sqrt(x)*2,x=>x<0?NaN:x*x/4]];
+  const i=Math.floor(rnd(0,fs.length));Object.assign(v,{fname:fs[i][0],fn:fs[i][1],inv:fs[i][2]});
+}
+function drawInverse(v,p,f,hold){
+  const [c0,c1]=v.c,sz=Math.min(v.w,v.h),ox=v.x+(v.w-sz)/2,oy=v.y+(v.h-sz)/2,r=4;
+  const px=x=>ox+sz/2+x/r*(sz/2),py=y=>oy+sz/2-y/r*(sz/2);
+  cx.strokeStyle=col(c0,ALPHA*1.5*f);cx.lineWidth=1.2;seg([ox,py(0)],[ox+sz,py(0)]);seg([px(0),oy],[px(0),oy+sz]);
+  cx.setLineDash([3,4]);cx.strokeStyle=col(c0,ALPHA*1.6*f);seg([px(-r),py(-r)],[px(r),py(r)]);cx.setLineDash([]);
+  label("y = x",px(r)-34,py(r)+12,f*.8,c0);
+  cx.save();cx.beginPath();cx.rect(ox,oy,sz,sz);cx.clip();
+  const p1=easeO(p/.35),p2=easeO((p-.35)/.35);
+  cx.strokeStyle=col(c0,LINE(f));cx.lineWidth=2;trace(v.fn,px,py,-r+2*r*p1,-r,120);
+  if(p2>0){cx.strokeStyle=col(c1,LINE(f));trace(v.inv,px,py,-r+2*r*p2,-r,120)}
+  cx.restore();
+  label("y = "+v.fname,ox+4,oy+12,f,c0);
+  if(p2>=1){
+    label("y = f⁻¹(x)",ox+sz-70,oy+sz-4,f,c1);
+    const a=-1.2+1.4*(1-Math.cos(hold*.0006))/2*2;
+    const b=v.fn(a);
+    if(isFinite(b)&&Math.abs(b)<r){
+      dot(px(a),py(b),3.4,col(c0,BOLD(f)));dot(px(b),py(a),3.4,col(c1,BOLD(f)));
+      dash([px(a),py(b)],[px(b),py(a)],col(c1,ALPHA*1.6*f));
+      label(`(${neg(a.toFixed(1))}, ${neg(b.toFixed(1))})`,px(a)+6,py(b)-6,f,c0);label(`(${neg(b.toFixed(1))}, ${neg(a.toFixed(1))})`,px(b)+6,py(a)+14,f,c1);
+    }
+  }
+}
+/* y = 1/(x − a) + b with its asymptotes; a slides on the hold */
+function makeRational(v){v.b=rnd(-.6,.6);v.a0=rnd(-1,1)}
+function drawRational(v,p,f,hold){
+  const [c0,c1]=v.c,{px,py}=frame(v,f,c0,4,4);
+  const t=p<1?easeO((p-.2)/.4):1,a=v.a0+t*1.2*Math.sin(hold*.0005),b=v.b;
+  cx.save();cx.beginPath();cx.rect(v.x,v.y,v.w,v.h);cx.clip();
+  if(p>.2){dash([px(a),v.y],[px(a),v.y+v.h],col(c1,ALPHA*2.2*f*t),1.2);dash([v.x,py(b)],[v.x+v.w,py(b)],col(c1,ALPHA*2.2*f*t),1.2)}
+  cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=2.2;
+  const cp=easeO(p/.5);
+  trace(x=>1/(x-a)+b,px,py,-4+(a-.02+4)*cp,-4,80);
+  trace(x=>1/(x-a)+b,px,py,(a+.02)+(4-(a+.02))*cp,a+.02,80);
+  cx.restore();
+  label("y = 1/(x − a) + b",v.x+4,v.y+12,f,c0);
+  if(p>.3)label(`x = ${neg(a.toFixed(1))}`,px(a)+5,v.y+v.h-4,f,c1);
+}
+/* a scatter plot growing its line of best fit, with its real r */
+function makeScatter(v){
+  const n=17,dir=Math.random()<.5?1:-1,noise=rnd(.08,.2),pts=[];
+  for(let i=0;i<n;i++){const x=rnd(.04,.96),y=Math.max(.02,Math.min(.98,.5+dir*(x-.5)*rnd(.7,.9)+gauss()*noise));pts.push({x,y,t:i/n})}
+  const mx=pts.reduce((s,p)=>s+p.x,0)/n,my=pts.reduce((s,p)=>s+p.y,0)/n;
+  let sxy=0,sxx=0,syy=0;pts.forEach(p=>{sxy+=(p.x-mx)*(p.y-my);sxx+=(p.x-mx)**2;syy+=(p.y-my)**2});
+  const b=sxy/sxx;Object.assign(v,{pts,b,a:my-b*mx,r:sxy/Math.sqrt(sxx*syy)});
+}
+function drawScatter(v,p,f){
+  const [c0,c1]=v.c,px=x=>v.x+x*v.w,py=y=>v.y+v.h-y*v.h;
+  axes(v,f,c0,true);
+  v.pts.forEach(pt=>{const k=(p/.62-pt.t*.95)/.08;if(k<=0)return;const r=2.8*(1+.5*Math.max(0,1-k)*Math.min(1,k*3));dot(px(pt.x),py(pt.y),r,col(c0,ALPHA*2.6*f*Math.min(1,k)))});
+  const lp=easeO((p-.66)/.24);
+  if(lp>0){
+    const x1=.02+.96*lp;cx.strokeStyle=col(c1,LINE(f));cx.lineWidth=2;seg([px(.02),py(v.a+v.b*.02)],[px(x1),py(v.a+v.b*x1)]);
+    if(lp>=1)label(v.grade9?(Math.abs(v.r)>.7?"strong ":"weak ")+(v.r>0?"positive":"negative"):"r = "+neg(v.r.toFixed(2)),v.x+v.w-(v.grade9?96:62),v.b>0?v.y+v.h-6:v.y+12,f,c1);
+  }
+}
+/* a secant swinging into the tangent as h → 0 (rates of change) */
+function makeTangent(v){
+  const a=rnd(.24,.32),k=rnd(3,4.2),ph=rnd(0,6.28),tilt=rnd(-.2,.2);
+  v.f=t=>.5+a*Math.sin(k*t+ph)+tilt*(t-.5);v.fp=t=>a*k*Math.cos(k*t+ph)+tilt;
+  v.t0=rnd(.38,.58);v.h0=(Math.random()<.5?-1:1)*rnd(.3,.36);
+}
+function drawTangent(v,p,f){
+  const [c0,c1]=v.c,px=t=>v.x+t*v.w,py=y=>v.y+v.h-y*v.h;
+  axes(v,f,c0,true);
+  cx.strokeStyle=col(c0,LINE(f));cx.lineWidth=2;trace(v.f,px,py,easeO(p/.3));
+  if(p<.32)return;
+  const k=clamp01((p-.32)/.06),q=easeIO((p-.42)/.46),h=v.h0*(1-q);
+  const t0=v.t0,t1=t0+h,y0=v.f(t0),m=Math.abs(h)>.002?(v.f(t1)-y0)/h:v.fp(t0),lc=mix(c1,c0,q);
+  cx.save();cx.beginPath();cx.rect(v.x,v.y-10,v.w,v.h+10);cx.clip();
+  cx.beginPath();cx.moveTo(px(-.1),py(y0+m*(-.1-t0)));cx.lineTo(px(1.1),py(y0+m*(1.1-t0)));
+  cx.strokeStyle=col(lc,BOLD(f)*k*.9);cx.lineWidth=1.6;cx.stroke();cx.restore();
+  dot(px(t0),py(y0),3.4,col(c0,BOLD(f)*k));
+  if(Math.abs(h)>.004)dot(px(t1),py(v.f(t1)),3,col(c1,BOLD(f)*k*clamp01(Math.abs(h)/.03)));
+  if(p>.42&&p<.9)label("average rate, h → 0",v.x+v.w-128,v.y+12,f*clamp01((p-.42)/.05)*clamp01((.9-p)/.05),c1);
+  if(p>=.9)label("instantaneous rate",px(t0)+8,py(y0)-10,f*clamp01((p-.9)/.06),c0);
+}
+/* doubling: 1, 2, 4, 8 … as stacked dots, with 2ⁿ */
+function makeDoubling(v){}
+function drawDoubling(v,p,f,hold){
+  const [c0,c1]=v.c,n=7,bw=v.w/n,base=v.y+v.h-16,unit=(v.h-44)/64;
+  axes(v,f,c0);
+  for(let i=0;i<n;i++){
+    const k=clamp01((p-i*.12)/.08);if(k<=0)break;
+    const cnt=Math.pow(2,i),h=cnt*unit*k;
+    cx.fillStyle=col(i%2?c1:c0,ALPHA*2.4*f);cx.fillRect(v.x+(i+.2)*bw,base-h,bw*.6,h);
+    text(String(cnt),v.x+(i+.5)*bw,base-h-5,f*k,i%2?c1:c0,9);
+  }
+  labelSup("y = 2","x",v.x+4,v.y+12,f,c1);
+  label("doubling",v.x+v.w-56,v.y+12,f,c0);
+}
+
+/* ══════════ MTH1W vignettes: Grade 9, and fun ══════════
+   Pseudocode typing itself and printing its output; a table of values
+   becoming points becoming a line; a slope triangle sliding along a line;
+   x- and y-intercepts; a rectangle of fixed perimeter hunting its biggest
+   area; a circle unrolling its circumference; Pythagoras with squares on
+   the sides; pizza fractions; integer hops on a number line; an
+   algebra-tile area model; a balance scale solving an equation; a
+   triangle's angles tearing off to make 180°; BEDMAS one step at a time;
+   integer chips cancelling in zero pairs; similar triangles scaling;
+   savings growing by the week. */
+const PALKEYS=["sk","vi","co","am","gn","tq"];
+const KINDS=["code","table","slope","intercepts","rect","circle","pythag","pizza","numberline","tiles","balance","angles","bedmas","chips","scale","piggy"];
+const KC={code:["sk","gn"],table:["sk","vi"],slope:["vi","am","co"],intercepts:["sk","co"],rect:["am","sk"],circle:["sk","co"],
+          pythag:["vi","am","co"],pizza:["am","co"],numberline:["sk","co"],tiles:["sk","vi","am"],balance:["am","sk"],
+          angles:["co","am","sk"],bedmas:["vi","co"],chips:["co","sk"],scale:["gn","am"],piggy:["gn","am"]};
+const SIZE={code:[[230,300],[120,160]],table:[[260,330],[150,190]],slope:[[220,290],[150,200]],intercepts:[[220,290],[150,200]],
+            rect:[[220,290],[150,200]],circle:[[240,320],[150,190]],pythag:[[200,260],[200,260]],pizza:[[240,300],[130,160]],
+            numberline:[[260,340],[90,120]],tiles:[[220,280],[170,220]],balance:[[240,320],[150,190]],angles:[[240,310],[170,220]],
+            bedmas:[[220,280],[150,190]],chips:[[230,300],[120,160]],scale:[[250,320],[150,200]],piggy:[[230,300],[140,180]]};
+const LOOPS={slope:1,rect:1,circle:1,balance:1,scale:1};
 const SNIPS=[
   {lines:["store 8 as base","store 5 as height","output base * height / 2"],out:"20"},
   {lines:["store 7 as width","store 4 as length","output 2 * width + 2 * length"],out:"22"},
@@ -776,88 +939,368 @@ const SNIPS=[
   {lines:["store 0 as total","repeat 4 times","  store total + 5 as total","output total"],out:"20"},
   {lines:["store 2 as m","store 1 as b","store 3 as x","output m * x + b"],out:"7"},
   {lines:["store 40 as price","output price * 0.85"],out:"34"},
-  {lines:["store 3 as x","store 9 as y","if y = 2 * x + 3",'  output "on the line"',"else",'  output "off the line"'],out:"on the line"},
   {lines:["store 5 as rise","store 2 as run","output rise / run"],out:"2.5"},
-  {lines:["store 2 as sideLength","output sideLength^3","output 6 * sideLength^2"],out:"8   24"},
   {lines:["store 200 as principal","output principal * 0.05 * 3"],out:"30"},
   {lines:["store 0 as x","repeat 3 times","  output 4 * x + 1","  store x + 1 as x"],out:"1   5   9"},
 ];
-const LINE_H=21,CHAR_MS=110,LINE_PAUSE=340,OUT_DELAY=1100,HOLD=9000,FADE=3200;
-const cards=[];
-let nCards=3;
-function spawnCard(i,now,delay){
-  const used=cards.filter((c,j)=>c&&j!==i).map(c=>c.s);
-  const pool=SNIPS.filter(s=>!used.includes(s));
-  const s=pool[Math.floor(Math.random()*pool.length)]||SNIPS[0];
-  const times=[];let t=0;
-  s.lines.forEach(l=>{for(let k=0;k<l.length;k++){t+=CHAR_MS*(.6+Math.random()*.9);times.push(t)}t+=LINE_PAUSE});
-  cx.font=MONO;
-  const cw=Math.max(...s.lines.map(l=>cx.measureText(l).width))+20;
-  const ch=(s.lines.length+2)*LINE_H;
-  const bandW=W/nCards;
-  const x=Math.min(Math.max(bandW*i+16+Math.random()*Math.max(bandW-cw-32,1),12),Math.max(W-cw-12,12));
-  const y=60+Math.random()*Math.max(H-ch-140,40);
-  return {s,times,typeEnd:t,x,y,born:now+(delay||0)};
+const CODEF="12px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";
+function makeCode(v){
+  const s=SNIPS[Math.floor(rnd(0,SNIPS.length))],times=[];let t=0;
+  s.lines.forEach(l=>{for(let k=0;k<l.length;k++){t+=95*(.6+Math.random()*.9);times.push(t)}t+=320});
+  Object.assign(v,{s,times,typeEnd:t,hold:Math.max(v.hold,t+3000)});v.life=T_IN+v.build+v.hold+T_OUT;
 }
-function drawGrid(){
-  const s=26;
-  cx.lineWidth=1;
-  const minor=new Path2D(),major=new Path2D();
-  for(let x=.5,i=0;x<W;x+=s,i++){
-    const p=i%5===0?major:minor;
-    p.moveTo(x,0);p.lineTo(x,H);
-  }
-  for(let y=.5,i=0;y<H;y+=s,i++){
-    const p=i%5===0?major:minor;
-    p.moveTo(0,y);p.lineTo(W,y);
-  }
-  cx.strokeStyle=`rgba(${RGB},${ALPHA*.35})`;cx.stroke(minor);
-  cx.strokeStyle=`rgba(${RGB},${ALPHA*.7})`;cx.stroke(major);
-  if(MX>-1e3){
-    const g=cx.createRadialGradient(MX,MY,0,MX,MY,170);
-    g.addColorStop(0,`rgba(${RGB},${Math.min(ALPHA*2.4,.3)})`);g.addColorStop(1,`rgba(${RGB},0)`);
-    cx.strokeStyle=g;cx.stroke(minor);cx.stroke(major);
-  }
-}
-function drawCard(c,t){
-  const age=t-c.born;
-  if(age<0)return true;
-  const total=c.typeEnd+OUT_DELAY+HOLD+FADE;
-  if(age>total)return false;
-  const fade=age>c.typeEnd+OUT_DELAY+HOLD?Math.max(0,1-(age-c.typeEnd-OUT_DELAY-HOLD)/FADE):1;
-  cx.font=MONO;
-  const txtA=Math.min(ALPHA*2,.3)*fade;
-  let idx=0,curLine=-1,curText="";
-  c.s.lines.forEach((l,li)=>{
-    let shown="";
-    for(let k=0;k<l.length;k++){if(age>=c.times[idx])shown+=l[k];idx++}
-    if(shown){
-      cx.fillStyle=`rgba(${RGB},${txtA})`;
-      cx.fillText(shown,c.x,c.y+li*LINE_H);
-      curLine=li;curText=shown;
-    }
+function drawCode(v,p,f,hold,age){
+  const [c0,c1]=v.c,LH=20,T=age-T_IN*.4;if(T<0)return;
+  cx.font=CODEF;let idx=0,curLine=-1,curText="";
+  cx.strokeStyle=col(c0,ALPHA*1.4*f);cx.lineWidth=1;rrect(v.x-10,v.y-14,v.w+20,(v.s.lines.length+2)*LH+10,6);cx.stroke();
+  v.s.lines.forEach((l,li)=>{
+    let shown="";for(let k=0;k<l.length;k++){if(T>=v.times[idx])shown+=l[k];idx++}
+    if(shown){cx.fillStyle=col(c0,Math.min(ALPHA*3,.42)*f);cx.fillText(shown,v.x,v.y+li*LH);curLine=li;curText=shown}
   });
-  if(age<c.typeEnd&&!reduce&&curLine>=0&&Math.floor(t/560)%2===0){
-    cx.fillStyle=`rgba(${RGB},${Math.min(ALPHA*3,.4)*fade})`;
-    cx.fillRect(c.x+cx.measureText(curText).width+2,c.y+curLine*LINE_H-11,7,14);
+  if(T<v.typeEnd&&curLine>=0&&Math.floor(age/560)%2===0){cx.fillStyle=col(c0,Math.min(ALPHA*3,.4)*f);cx.fillRect(v.x+cx.measureText(curText).width+2,v.y+curLine*LH-11,7,14)}
+  if(T>=v.typeEnd+900){cx.fillStyle=col(c1,BOLD(f));cx.font="bold "+CODEF;cx.fillText("» "+v.s.out,v.x,v.y+(v.s.lines.length+1)*LH)}
+}
+function makeTable(v){v.m=Math.floor(rnd(1,4));v.b=Math.floor(rnd(-2,3))}
+function drawTable(v,p,f){
+  const [c0,c1]=v.c,tw=78,gx=v.x+tw+16,gw=v.w-tw-16,px=x=>gx+12+x/5*(gw-20),top=v.m*5+v.b,py=y=>v.y+v.h-14-(y-Math.min(0,v.b))/(top-Math.min(0,v.b))*(v.h-34);
+  cx.strokeStyle=col(c0,ALPHA*1.5*f);cx.lineWidth=1.2;cx.lineCap="round";seg([gx,py(Math.min(0,v.b))],[gx+gw,py(Math.min(0,v.b))]);seg([px(0),v.y+6],[px(0),v.y+v.h-14]);
+  text("x",v.x+18,v.y+10,f,c0,10);text("y",v.x+56,v.y+10,f,c0,10);
+  cx.strokeStyle=col(c0,ALPHA*1.6*f);seg([v.x,v.y+15],[v.x+tw,v.y+15]);seg([v.x+tw/2,v.y],[v.x+tw/2,v.y+v.h-12]);
+  for(let i=0;i<=5;i++){
+    const k=clamp01((p-i*.1)/.07);if(k<=0)break;const y=v.m*i+v.b;
+    text(String(i),v.x+18,v.y+30+i*16,f*k,c0,10);text(neg(y),v.x+56,v.y+30+i*16,f*k,c0,10);
+    dot(px(i),py(y),3.4,col(c1,BOLD(f)*k));
   }
-  if(age>=c.typeEnd+OUT_DELAY){
-    cx.fillStyle=`rgba(${RGB},${Math.min(ALPHA*3.2,.42)*fade})`;
-    cx.fillText("» "+c.s.out,c.x,c.y+(c.s.lines.length+1)*LINE_H);
+  const lp=easeO((p-.65)/.25);
+  if(lp>0){cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;seg([px(0),py(v.b)],[px(5*lp),py(v.m*5*lp+v.b)])}
+  if(lp>=1)label(`y = ${v.m}x ${v.b<0?"−":"+"} ${Math.abs(v.b)}`,gx+gw-82,v.y+12,f,c1);
+}
+function makeSlope(v){v.rise=Math.floor(rnd(2,5));v.run=Math.floor(rnd(2,5));v.m=v.rise/v.run*(Math.random()<.5?1:-1)}
+function drawSlope(v,p,f,hold){
+  const [c0,c1,c2]=v.c,{px,py}=frame(v,f,c0,6,6);
+  cx.save();cx.beginPath();cx.rect(v.x,v.y,v.w,v.h);cx.clip();
+  cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=2.2;const e=easeO(p/.4);seg([px(-6),py(-6*v.m)],[px(-6+12*e),py((-6+12*e)*v.m)]);
+  cx.restore();
+  if(p<.4)return;
+  const k=clamp01((p-.4)/.1),x0=p<1?-3+2*easeIO((p-.5)/.5):-1+2.2*Math.sin(hold*.0005);
+  const s=v.m<0?-1:1,A=[px(x0),py(x0*v.m)],B=[px(x0+v.run),py(x0*v.m)],C=[px(x0+v.run),py((x0+v.run)*v.m)];
+  cx.strokeStyle=col(c1,BOLD(f)*k);cx.lineWidth=2;cx.setLineDash([4,3]);seg(A,B);cx.strokeStyle=col(c2,BOLD(f)*k);seg(B,C);cx.setLineDash([]);
+  dot(A[0],A[1],3,col(c0,BOLD(f)*k));dot(C[0],C[1],3,col(c0,BOLD(f)*k));
+  label("run "+v.run,(A[0]+B[0])/2-16,B[1]+(s>0?14:-6),f*k,c1);label("rise "+neg(s*v.rise),B[0]+6,(B[1]+C[1])/2+4,f*k,c2);
+  label(`m = rise/run = ${neg(s*v.rise)}/${v.run}`,v.x+4,v.y+12,f*k,c0);
+}
+function makeIntercepts(v){v.m=rnd(.5,1.2)*(Math.random()<.5?1:-1);v.b=rnd(1.5,3.5)*(Math.random()<.5?1:-1)}
+function drawIntercepts(v,p,f){
+  const [c0,c1]=v.c,{px,py}=frame(v,f,c0,6,6),F=x=>v.m*x+v.b;
+  cx.save();cx.beginPath();cx.rect(v.x,v.y,v.w,v.h);cx.clip();
+  cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=2.2;const e=easeO(p/.45);seg([px(-6),py(F(-6))],[px(-6+12*e),py(F(-6+12*e))]);
+  cx.restore();
+  const k1=clamp01((p-.5)/.12),k2=clamp01((p-.7)/.12),xi=-v.b/v.m;
+  if(k1>0){dot(px(0),py(v.b),3.8,col(c1,BOLD(f)*k1));label(`y-intercept (0, ${neg(v.b.toFixed(1))})`,px(0)+8,py(v.b)-6,f*k1,c1)}
+  if(k2>0){dot(px(xi),py(0),3.8,col(c1,BOLD(f)*k2));label(`x-intercept (${neg(xi.toFixed(1))}, 0)`,px(xi)+(xi>0?-110:8),py(0)+(v.b>0?16:-8),f*k2,c1)}
+  label(`y = ${neg(v.m.toFixed(1))}x ${v.b<0?"−":"+"} ${Math.abs(v.b).toFixed(1)}`,v.x+4,v.y+12,f,c0);
+}
+function makeRect(v){}
+function drawRect(v,p,f,hold){
+  const [c0,c1]=v.c,P=24,u=(v.h-50)/11,ox=v.x+(v.w-11*u)/2,oy=v.y+v.h-20;
+  const w=p<1?2+4*easeIO((p-.2)/.8):6+4*Math.sin(hold*.0005),h=P/2-w,A=w*h;
+  cx.fillStyle=col(c0,ALPHA*1.4*f);cx.fillRect(ox,oy-h*u,w*u,h*u);cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=2;cx.strokeRect(ox,oy-h*u,w*u,h*u);
+  label(w.toFixed(1),ox+w*u/2-8,oy+14,f,c0);label(h.toFixed(1),ox+w*u+6,oy-h*u/2+4,f,c0);
+  label(`same fence, P = 24   A = ${A.toFixed(1)}`,v.x+4,v.y+12,f,c1);
+  const near=clamp01(1-Math.abs(w-6)/.4);if(near>0)label("square wins: 36",v.x+v.w-96,v.y+v.h+2,f*near,c1);
+}
+function makeCircle9(v){v.R=Math.min((v.h-50)/2,v.w/9);v.cx0=v.x+v.R+12;v.cy0=v.y+v.R+14}
+function drawCircle9(v,p,f,hold){
+  const [c0,c1]=v.c,R=v.R,X=v.cx0,Y=v.cy0,base=v.y+v.h-16,L=2*Math.PI*R;
+  const u=p<1?easeIO((p-.2)/.8):(hold*.00025)%1.3>1?1:((hold*.00025)%1.3);
+  const rx=X+L*u;
+  ring(rx,Y,R,col(c0,LINE(f)),1.8);
+  cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;seg([rx-R,Y],[rx+R,Y]);label("d",rx-4,Y-6,f,c1);
+  const th=Math.PI/2-u*6.283;dot(rx+R*Math.cos(th),Y+R*Math.sin(th),3,col(c0,BOLD(f)));
+  cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=3;cx.lineCap="round";seg([X,base],[X+L*u,base]);
+  cx.strokeStyle=col(c1,ALPHA*2*f);cx.lineWidth=1;for(let i=0;i<=3;i++)seg([X+2*R*i,base-5],[X+2*R*i,base+5]);
+  label("C = πd: three diameters and a bit",v.x+4,base+14,f,c0);
+}
+function makePythag(v){}
+function drawPythag(v,p,f){
+  const [c0,c1,c2]=v.c,s=Math.min(v.w,v.h)/8.2,a=3*s,b=4*s,ox=v.x+v.w/2-b/2+1.5*s,oy=v.y+v.h/2+a/2-1.3*s;
+  const A=[ox,oy],B=[ox+b,oy],C=[ox,oy-a];
+  const k1=easeO(p/.3),k2=easeO((p-.3)/.25),k3=easeO((p-.55)/.3);
+  cx.lineWidth=1.4;
+  if(k2>0){cx.fillStyle=col(c0,ALPHA*1.3*f*k2);cx.fillRect(ox,oy,b,b);cx.strokeStyle=col(c0,LINE(f)*k2);cx.strokeRect(ox,oy,b,b);text("16",ox+b/2,oy+b/2+4,f*k2,c0,11);
+    cx.fillStyle=col(c1,ALPHA*1.3*f*k2);cx.fillRect(ox-a,oy-a,a,a);cx.strokeStyle=col(c1,LINE(f)*k2);cx.strokeRect(ox-a,oy-a,a,a);text("9",ox-a/2,oy-a/2+4,f*k2,c1,11)}
+  if(k3>0){const ux=(B[0]-C[0])/(5*s),uy=(B[1]-C[1])/(5*s),nx=-uy,ny=ux;
+    cx.beginPath();cx.moveTo(C[0],C[1]);cx.lineTo(B[0],B[1]);cx.lineTo(B[0]-nx*5*s,B[1]-ny*5*s);cx.lineTo(C[0]-nx*5*s,C[1]-ny*5*s);cx.closePath();
+    cx.fillStyle=col(c2,ALPHA*1.3*f*k3);cx.fill();cx.strokeStyle=col(c2,LINE(f)*k3);cx.stroke();text("25",(C[0]+B[0])/2-nx*2.5*s,(C[1]+B[1])/2-ny*2.5*s+4,f*k3,c2,11)}
+  cx.strokeStyle=col(c0,BOLD(f)*k1);cx.lineWidth=2.2;cx.beginPath();cx.moveTo(A[0],A[1]);cx.lineTo(B[0],B[1]);cx.lineTo(C[0],C[1]);cx.closePath();cx.stroke();
+  cx.strokeStyle=col(c0,BOLD(f)*k1);cx.lineWidth=1;cx.strokeRect(ox,oy-8,8,8);
+  if(k3>=1)label("a² + b² = c²:  9 + 16 = 25",v.x+4,v.y+v.h+2,f,c2);
+}
+function makePizza(v){}
+function drawPizza(v,p,f){
+  const [c0,c1]=v.c,R=Math.min((v.h-30)/2,v.w/5),Y=v.y+R+8;
+  [[8,3,v.x+R+10,c0],[16,6,v.x+v.w-R-10,c1]].forEach(([n,m,X,c],row)=>{
+    const k=clamp01((p-row*.35)/.35);if(k<=0)return;
+    for(let i=0;i<n;i++){
+      const a0=-Math.PI/2+i/n*6.283,a1=a0+6.283/n;
+      cx.beginPath();cx.moveTo(X,Y);cx.arc(X,Y,R,a0,a1);cx.closePath();
+      if(i<m*Math.min(1,k*1.4)){cx.fillStyle=col(c,ALPHA*2.4*f);cx.fill()}
+      cx.strokeStyle=col(c,LINE(f)*k);cx.lineWidth=1;cx.stroke();
+    }
+    text(`${m}/${n}`,X,Y+R+14,f*k,c,10);
+  });
+  if(p>.75){text("=",v.x+v.w/2,Y+5,f*clamp01((p-.75)/.1),c0,16);label("same pizza, smaller slices",v.x+v.w/2-78,v.y+v.h+2,f*clamp01((p-.75)/.1),c1)}
+}
+function makeNumberline(v){const a=Math.floor(rnd(-5,0)),b=Math.floor(rnd(2,8));Object.assign(v,{a,b})}
+function drawNumberline(v,p,f){
+  const [c0,c1]=v.c,y=v.y+v.h-30,px=n=>v.x+10+(n+6)/12*(v.w-20);
+  cx.strokeStyle=col(c0,ALPHA*2*f);cx.lineWidth=1.4;cx.lineCap="round";seg([px(-6),y],[px(6),y]);
+  for(let n=-6;n<=6;n++){seg([px(n),y-4],[px(n),y+4]);text(neg(n),px(n),y+16,f,c0,9)}
+  const k1=easeO(p/.35),k2=easeO((p-.4)/.4);
+  dot(px(0),y,3.4,col(c0,BOLD(f)));
+  if(k1>0){const x1=0+v.a*k1;cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;cx.beginPath();cx.moveTo(px(0),y);cx.quadraticCurveTo(px(v.a/2),y-28,px(x1),y);cx.stroke();if(k1>=1)dot(px(v.a),y,3.4,col(c1,BOLD(f)))}
+  if(k2>0){const x2=v.a+v.b*k2;cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;cx.beginPath();cx.moveTo(px(v.a),y);cx.quadraticCurveTo(px(v.a+v.b/2),y-28,px(x2),y);cx.stroke();if(k2>=1)dot(px(v.a+v.b),y,4,col(c1,BOLD(f)))}
+  label(`${neg(v.a)} + ${v.b} = ${neg(v.a+v.b)}`,v.x+4,v.y+12,f*(k2>=1?1:k1),c1);
+}
+function makeTiles(v){}
+function drawTiles(v,p,f){
+  const [c0,c1,c2]=v.c,X=Math.min(v.w/2.6,v.h/2.6),u=X/3.2,ox=v.x+v.w/2-(X+3*u)/2,oy=v.y+v.h/2+(X+2*u)/2-6;
+  const k1=easeO(p/.25),k2=easeO((p-.25)/.25),k3=easeO((p-.5)/.25);
+  cx.lineWidth=1;
+  if(k1>0){cx.fillStyle=col(c0,ALPHA*1.6*f*k1);cx.fillRect(ox,oy-X,X,X);cx.strokeStyle=col(c0,LINE(f)*k1);cx.strokeRect(ox,oy-X,X,X);text("x²",ox+X/2,oy-X/2+4,f*k1,c0,11)}
+  if(k2>0){for(let i=0;i<3;i++){cx.fillStyle=col(c1,ALPHA*1.6*f*k2);cx.fillRect(ox+X+i*u,oy-X,u,X);cx.strokeStyle=col(c1,LINE(f)*k2);cx.strokeRect(ox+X+i*u,oy-X,u,X)}
+    for(let i=0;i<2;i++){cx.fillStyle=col(c1,ALPHA*1.6*f*k2);cx.fillRect(ox,oy+i*u,X,u);cx.strokeStyle=col(c1,LINE(f)*k2);cx.strokeRect(ox,oy+i*u,X,u)}}
+  if(k3>0){for(let i=0;i<3;i++)for(let j=0;j<2;j++){cx.fillStyle=col(c2,ALPHA*2*f*k3);cx.fillRect(ox+X+i*u,oy+j*u,u,u);cx.strokeStyle=col(c2,LINE(f)*k3);cx.strokeRect(ox+X+i*u,oy+j*u,u,u)}}
+  label("x + 3",ox+X/2+u,oy-X-8,f,c0);label("x + 2",ox-40,oy-X/2+u,f,c0);
+  if(k3>=1)label("(x + 2)(x + 3) = x² + 5x + 6",v.x+4,v.y+v.h+2,f,c1);
+}
+function makeBalance(v){}
+function drawBalance(v,p,f,hold){
+  const [c0,c1]=v.c,step=p<1?0:Math.min(3,Math.floor(hold/2200)),X=v.x+v.w/2,Y=v.y+v.h-30,arm=v.w*.38;
+  cx.strokeStyle=col(c0,BOLD(f));cx.lineWidth=2.2;cx.lineCap="round";seg([X-arm,Y],[X+arm,Y]);seg([X,Y],[X,Y+16]);seg([X-14,Y+16],[X+14,Y+16]);
+  const drawSide=(x0,xs,units,c)=>{let x=x0;for(let i=0;i<xs;i++){cx.fillStyle=col(c,ALPHA*2*f);cx.fillRect(x,Y-26,10,22);cx.strokeStyle=col(c,LINE(f));cx.lineWidth=1;cx.strokeRect(x,Y-26,10,22);text("x",x+5,Y-11,f,c,9);x+=13}
+    for(let i=0;i<units;i++){cx.fillStyle=col(c1,ALPHA*2.2*f);cx.fillRect(x,Y-12,8,8);cx.strokeStyle=col(c1,LINE(f));cx.strokeRect(x,Y-12,8,8);x+=10}};
+  const L=[[2,3],[2,0],[2,0],[1,0]][step],R=[[0,11],[0,8],[0,8],[0,4]][step];
+  drawSide(X-arm+6,L[0],L[1],c0);drawSide(X+6,R[0],R[1],c0);
+  const msgs=["2x + 3 = 11","take 3 off both sides","2x = 8","x = 4  (halve both sides)"];
+  label(msgs[step],v.x+4,v.y+12,f,c1);
+}
+function makeAngles(v){
+  const A=[v.x+18,v.y+v.h*.62],B=[v.x+v.w-18,v.y+v.h*.62],C=[v.x+v.w*rnd(.3,.6),v.y+12];
+  const ang=(P,Q,R)=>{const a1=Math.atan2(Q[1]-P[1],Q[0]-P[0]),a2=Math.atan2(R[1]-P[1],R[0]-P[0]);let d=a2-a1;while(d>Math.PI)d-=6.283;while(d<-Math.PI)d+=6.283;return Math.abs(d)};
+  Object.assign(v,{P:[A,B,C],deg:[ang(A,B,C),ang(B,C,A),ang(C,A,B)]});
+}
+function drawAngles(v,p,f){
+  const [A,B,C]=v.P,cs=v.c,k1=easeO(p/.25),k2=easeO((p-.25)/.2),k3=easeIO((p-.5)/.4);
+  cx.strokeStyle=col(cs[2],BOLD(f)*k1);cx.lineWidth=2;cx.lineJoin="round";cx.beginPath();cx.moveTo(A[0],A[1]);cx.lineTo(B[0],B[1]);cx.lineTo(C[0],C[1]);cx.closePath();cx.stroke();
+  const base=[v.x+v.w/2,v.y+v.h-12],Rr=18;
+  /* each angle as a sector at its vertex, then sliding to the baseline, side by side */
+  const verts=[A,B,C],starts=[[B,C],[C,A],[A,B]];let acc=0;
+  verts.forEach((P,i)=>{
+    if(k2<=0)return;
+    const [Q,R]=starts[i],a1=Math.atan2(Q[1]-P[1],Q[0]-P[0]),a2=Math.atan2(R[1]-P[1],R[0]-P[0]);
+    let d=a2-a1;while(d>Math.PI)d-=6.283;while(d<-Math.PI)d+=6.283;
+    const from=P,to=base,X=from[0]+(to[0]-from[0])*k3,Y=from[1]+(to[1]-from[1])*k3;
+    const s0=d>0?a1:a2,sw=Math.abs(d);
+    const t0=-acc-sw,rot=(t0-s0)*k3;   /* at the baseline the sectors tile the half-turn above it */
+    cx.beginPath();cx.moveTo(X,Y);cx.arc(X,Y,Rr+4*k3,s0+rot,s0+rot+sw);cx.closePath();
+    cx.fillStyle=col(cs[i],ALPHA*2.4*f*k2);cx.fill();cx.strokeStyle=col(cs[i],LINE(f)*k2);cx.lineWidth=1;cx.stroke();
+    acc+=sw;
+  });
+  if(k3>0){cx.strokeStyle=col(cs[2],ALPHA*2*f*k3);cx.lineWidth=1.2;seg([base[0]-40,base[1]],[base[0]+40,base[1]])}
+  if(k3>=1)label("a + b + c = 180°",base[0]-56,base[1]+13,f,cs[2]);
+}
+function makeBedmas(v){
+  v.steps=[["3 + 4 × 2² − 6 ÷ 3","2²"],["3 + 4 × 4 − 6 ÷ 3","4 × 4"],["3 + 16 − 6 ÷ 3","6 ÷ 3"],["3 + 16 − 2","3 + 16"],["19 − 2","19 − 2"],["17",""]];
+}
+function drawBedmas(v,p,f){
+  const [c0,c1]=v.c,LH=24;
+  label("BEDMAS",v.x+4,v.y+10,f,c1);
+  v.steps.forEach(([s,hl],i)=>{
+    const k=clamp01((p-i*.14)/.1);if(k<=0)return;
+    const y=v.y+30+i*LH;cx.font="13px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";
+    cx.fillStyle=col(c0,Math.min(ALPHA*3.4,.42)*f*k);cx.fillText(s,v.x+6,y);
+    if(hl){const at=s.indexOf(hl);const x0=v.x+6+cx.measureText(s.slice(0,at)).width,w=cx.measureText(hl).width;
+      cx.fillStyle=col(c1,ALPHA*1.5*f*k);rrect(x0-3,y-13,w+6,18,4);cx.fill();cx.fillStyle=col(c1,BOLD(f)*k);cx.fillText(hl,x0,y)}
+  });
+}
+function makeChips(v){v.n=Math.floor(rnd(2,4));v.m=v.n+Math.floor(rnd(1,4))}
+function drawChips(v,p,f){
+  const [c0,c1]=v.c,r=9,y1=v.y+30,y2=v.y+62,x0=v.x+16,gap=24;
+  const k1=easeO(p/.3),pairs=Math.min(v.n,Math.floor(clamp01((p-.4)/.4)*(v.n+.99)));
+  for(let i=0;i<v.m;i++){const gone=i<pairs;const k=clamp01((k1*v.m-i)/1);if(k<=0)break;
+    dot(x0+i*gap,y1,r,col(c1,ALPHA*2.4*f*k*(gone?.25:1)));cx.strokeStyle=col(c1,LINE(f)*k*(gone?.3:1));cx.lineWidth=1.2;ring(x0+i*gap,y1,r,col(c1,LINE(f)*k*(gone?.3:1)));text("+",x0+i*gap,y1+4,f*k*(gone?.3:1),c1,11)}
+  for(let i=0;i<v.n;i++){const gone=i<pairs;const k=clamp01((k1*v.m-i)/1);if(k<=0)break;
+    dot(x0+i*gap,y2,r,col(c0,ALPHA*2.4*f*k*(gone?.25:1)));ring(x0+i*gap,y2,r,col(c0,LINE(f)*k*(gone?.3:1)));text("−",x0+i*gap,y2+4,f*k*(gone?.3:1),c0,11)}
+  for(let i=0;i<pairs;i++){dash([x0+i*gap,y1+r],[x0+i*gap,y2-r],col(c0,ALPHA*2*f))}
+  if(p>.4)label("zero pairs cancel",v.x+4,v.y+v.h-4,f*clamp01((p-.4)/.1),c0);
+  label(`${v.m} + (${neg(-v.n)}) ${pairs>=v.n?"= "+(v.m-v.n):""}`,v.x+4,v.y+12,f,c1);
+}
+function makeScale(v){}
+function drawScale(v,p,f,hold){
+  const [c0,c1]=v.c,u=Math.min(v.w/11,v.h/6.4),ox=v.x+10,oy=v.y+v.h-16;
+  const k=p<1?1+1.2*easeIO((p-.3)/.7):2.2-.6*(1-Math.cos(hold*.0005));
+  const tri=(x,y,s,c,lab)=>{cx.beginPath();cx.moveTo(x,y);cx.lineTo(x+4*s,y);cx.lineTo(x,y-3*s);cx.closePath();cx.fillStyle=col(c,ALPHA*1.6*f);cx.fill();cx.strokeStyle=col(c,BOLD(f));cx.lineWidth=2;cx.stroke();
+    if(lab){label((4*s/u).toFixed(1).replace(".0",""),x+2*s-6,y+13,f,c);label((3*s/u).toFixed(1).replace(".0",""),x-18,y-1.5*s+4,f,c)}};
+  tri(ox,oy,u,c0,true);tri(ox+5*u,oy,u*k,c1,true);
+  label(`scale factor ${k.toFixed(1)}`,v.x+4,v.y+12,f,c1);label(`area × ${(k*k).toFixed(1)}`,v.x+v.w-74,v.y+12,f,c1);
+}
+function makePiggy(v){v.a=20;v.d=15}
+function drawPiggy(v,p,f){
+  const [c0,c1]=v.c,n=8,px=i=>v.x+26+i/n*(v.w-36),top=v.a+n*v.d,py=y=>v.y+v.h-16-y/top*(v.h-36);
+  cx.strokeStyle=col(c0,ALPHA*1.5*f);cx.lineWidth=1.2;cx.lineCap="round";seg([px(0),py(0)],[px(n),py(0)]);seg([px(0),py(0)],[px(0),py(top)]);
+  label("weeks",px(n)-36,py(0)+14,f,c0);label("$",px(0)-12,py(top)+4,f,c0);
+  const shown=easeO(p/.8)*n;
+  cx.strokeStyle=col(c1,BOLD(f));cx.lineWidth=2;cx.beginPath();
+  for(let i=0;i<=n;i++){const k=clamp01(shown-i+1);if(k<=0)break;const y=v.a+v.d*i;i?cx.lineTo(px(i-1+k),py(y-v.d+v.d*k)):cx.moveTo(px(0),py(y));}
+  cx.stroke();
+  for(let i=0;i<=n;i++){if(shown<i)break;dot(px(i),py(v.a+v.d*i),3.2,col(c1,BOLD(f)));}
+  label("$20 to start, $15 a week",v.x+4,v.y+12,f,c1);
+  if(p>.85)label(`week 8: $${v.a+8*v.d}`,px(n)-64,py(v.a+8*v.d)-8,f*clamp01((p-.85)/.1),c1);
+}
+const MAKE={code:makeCode,table:makeTable,slope:makeSlope,intercepts:makeIntercepts,rect:makeRect,circle:makeCircle9,pythag:makePythag,pizza:makePizza,
+            numberline:makeNumberline,tiles:makeTiles,balance:makeBalance,angles:makeAngles,bedmas:makeBedmas,chips:makeChips,scale:makeScale,piggy:makePiggy};
+const DRAW={code:drawCode,table:drawTable,slope:drawSlope,intercepts:drawIntercepts,rect:drawRect,circle:drawCircle9,pythag:drawPythag,pizza:drawPizza,
+            numberline:drawNumberline,tiles:drawTiles,balance:drawBalance,angles:drawAngles,bedmas:drawBedmas,chips:drawChips,scale:drawScale,piggy:drawPiggy};
+
+/* ══════════ Vignette engine (shared) ══════════
+   The site's kinds file above defines PALKEYS, KINDS, KC, SIZE, LOOPS, MAKE
+   and DRAW; this runs them: five or six vignettes on screen, each in its own
+   colours, building, resting, fading and being replaced, drifting a tenth
+   as fast as the page. Behind them an aurora (#aurora, CSS) breathes. */
+const cv=document.getElementById("bg"),cx=cv.getContext("2d");
+let W,H,DPR,ALPHA=.13,SCY=0,MX=-1e4,MY=-1e4;
+/* the pointer: vignettes near it brighten and swell a little, and the aurora drifts with it */
+if(window.matchMedia("(hover:hover) and (pointer:fine)").matches&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+  document.addEventListener("mousemove",e=>{MX=e.clientX;MY=e.clientY;
+    document.documentElement.style.setProperty("--ax",((MX-W/2)*.04).toFixed(1)+"px");document.documentElement.style.setProperty("--ay",((MY-H/2)*.04).toFixed(1)+"px")},{passive:true});
+  document.documentElement.addEventListener("mouseleave",()=>{MX=MY=-1e4});
+}
+const PAL={};
+const reduce=REDUCE;
+const MONO="11px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";
+function bgColors(){
+  const s=getComputedStyle(document.documentElement);
+  PALKEYS.forEach(k=>PAL[k]=(s.getPropertyValue("--pal-"+k)||"120,120,120").trim());
+  ALPHA=parseFloat(s.getPropertyValue("--curve-a"))||ALPHA;
+  if(reduce&&vigs.length)drawStatic();
+}
+function sizeBg(){
+  DPR=Math.min(window.devicePixelRatio||1,2);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;
+  cx.setTransform(DPR,0,0,DPR,0,0);
+}
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const clamp01=p=>Math.max(0,Math.min(1,p));
+const easeO=p=>1-Math.pow(1-clamp01(p),3);
+const easeIn=p=>clamp01(p)*clamp01(p);
+const easeIO=p=>{p=clamp01(p);return p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2};
+function gauss(){let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s-3)/Math.SQRT1_2}
+const col=(k,a)=>`rgba(${PAL[k]||k},${Math.max(0,Math.min(1,a))})`;
+const mix=(k1,k2,t)=>{const a=(PAL[k1]||k1).split(","),b=(PAL[k2]||k2).split(",");return a.map((x,i)=>Math.round(+x+(+b[i]-x)*t)).join(",")};
+const LINE=f=>Math.min(ALPHA*3,.44)*f;
+const BOLD=f=>Math.min(ALPHA*3.8,.54)*f;
+const neg=s=>String(s).replace("-","−");
+const SUB="₀₁₂₃₄₅₆₇₈₉",sub=n=>String(n).split("").map(d=>SUB[+d]).join("");
+
+const T_IN=1200,T_OUT=2200,N_VIGS=window.innerWidth<700?3:window.innerWidth<1200?5:6;
+const vigs=[];
+function overlaps(a,list){
+  return list.some(b=>b&&a.x<b.x+b.w+40&&a.x+a.w+40>b.x&&a.y<b.y+b.h+40&&a.y+a.h+40>b.y);
+}
+function spawn(i,now,delay){
+  const used=vigs.filter((v,j)=>v&&j!==i).map(v=>v.kind);
+  const pool=KINDS.filter(k=>!used.includes(k));
+  const kind=pool[Math.floor(Math.random()*pool.length)]||KINDS[i%KINDS.length];
+  const sz=SIZE[kind],w=rnd(sz[0][0],sz[0][1]),h=rnd(sz[1][0],sz[1][1]);
+  let v;
+  for(let tries=0;tries<16;tries++){
+    v={kind,w,h,x:rnd(16,Math.max(17,W-w-16)),y:rnd(40,Math.max(41,H-h-30))};
+    if(!overlaps(v,vigs.filter((_,j)=>j!==i)))break;
   }
+  v.c=KC[kind];
+  v.born=now+(delay||0);
+  v.build=rnd(5000,8000);
+  v.hold=LOOPS[kind]?rnd(9000,14000):rnd(4000,7000);
+  v.life=T_IN+v.build+v.hold+T_OUT;
+  MAKE[kind](v);
+  return v;
+}
+function phase(v,t){
+  const age=t-v.born;
+  if(v.fixed)return{p:1,f:1};
+  const f=age<T_IN?age/T_IN:age>v.life-T_OUT?(v.life-age)/T_OUT:1;
+  return{p:clamp01((age-T_IN*.4)/v.build),f:clamp01(f)};
+}
+
+/* ── drawing helpers; colours are palette keys or "r,g,b" strings ── */
+function label(text,x,y,f,k){cx.font="italic "+MONO;cx.fillStyle=col(k,Math.min(ALPHA*3.4,.4)*f);cx.fillText(text,x,y)}
+function text(s,x,y,f,k,size,align){cx.font=(size||10)+"px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";cx.textAlign=align||"center";cx.fillStyle=col(k,Math.min(ALPHA*3.4,.4)*f);cx.fillText(s,x,y);cx.textAlign="left"}
+function labelSup(base,sup,x,y,f,k){
+  cx.font="italic "+MONO;const w=cx.measureText(base).width;cx.fillStyle=col(k,Math.min(ALPHA*3.4,.4)*f);cx.fillText(base,x,y);
+  cx.font="italic 8px 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace";cx.fillText(sup,x+w+1,y-5);
+}
+function dot(x,y,r,c){cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.fillStyle=c;cx.fill()}
+function ring(x,y,r,c,w){cx.beginPath();cx.arc(x,y,r,0,Math.PI*2);cx.strokeStyle=c;cx.lineWidth=w||1.5;cx.stroke()}
+function seg(p,q){cx.beginPath();cx.moveTo(p[0],p[1]);cx.lineTo(q[0],q[1]);cx.stroke()}
+function dash(p,q,c,w){cx.setLineDash([3,4]);cx.strokeStyle=c;cx.lineWidth=w||1;seg(p,q);cx.setLineDash([])}
+function rrect(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
+function arrow(x1,y1,x2,y2,c,w){
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy);
+  if(L<1)return;
+  cx.strokeStyle=c;cx.fillStyle=c;cx.lineWidth=w||1.8;cx.lineCap="round";
+  cx.beginPath();cx.moveTo(x1,y1);cx.lineTo(x2,y2);cx.stroke();
+  const ux=dx/L,uy=dy/L,hs=Math.min(9,L*.4);
+  cx.beginPath();cx.moveTo(x2,y2);
+  cx.lineTo(x2-ux*hs-uy*hs*.45,y2-uy*hs+ux*hs*.45);
+  cx.lineTo(x2-ux*hs+uy*hs*.45,y2-uy*hs-ux*hs*.45);
+  cx.closePath();cx.fill();
+}
+/* trace fn over t in [t0,t1] (default [0,1]) through px/py; skips off-box jumps */
+function trace(fn,px,py,t1,t0,n){
+  t0=t0||0;n=n||90;cx.beginPath();let pen=false;
+  for(let i=0;i<=n;i++){
+    const t=t0+(t1-t0)*i/n,y=fn(t);
+    if(!isFinite(y)||Math.abs(y)>50){pen=false;continue}
+    const X=px(t),Y=py(y);
+    pen?cx.lineTo(X,Y):cx.moveTo(X,Y);pen=true;
+  }
+  cx.stroke();
+}
+function axes(v,f,k,vertical){
+  cx.strokeStyle=col(k,ALPHA*1.5*f);cx.lineWidth=1.2;cx.lineCap="round";cx.beginPath();
+  if(vertical){cx.moveTo(v.x,v.y);cx.lineTo(v.x,v.y+v.h)}else cx.moveTo(v.x,v.y+v.h);
+  cx.lineTo(v.x+v.w,v.y+v.h);cx.stroke();
+}
+/* a centred Cartesian frame: xr,yr are half-ranges; returns px,py and draws the axes */
+function frame(v,f,k,xr,yr){
+  const px=x=>v.x+v.w/2+x/xr*(v.w/2),py=y=>v.y+v.h/2-y/yr*(v.h/2);
+  cx.strokeStyle=col(k,ALPHA*1.5*f);cx.lineWidth=1.2;cx.lineCap="round";
+  seg([v.x,py(0)],[v.x+v.w,py(0)]);seg([px(0),v.y],[px(0),v.y+v.h]);
+  return{px,py};
+}
+
+function drawVig(v,t){
+  if(t<v.born)return true;
+  const age=v.fixed?6000:t-v.born;
+  if(!v.fixed&&age>v.life)return false;
+  const{p,f}=phase(v,t);
+  if(f<=0)return true;
+  const hold=v.fixed?4000:Math.max(0,age-T_IN*.4-v.build);
+  const span=H+v.h+80,yy=(((v.y-SCY*.1)+v.h+40)%span+span)%span-v.h-40;
+  const cxp=v.x+v.w/2,cyp=yy+v.h/2,d=Math.hypot(MX-cxp,MY-cyp),q=clamp01(1-d/240),prox=q*q*(3-2*q);
+  cx.save();cx.translate(0,yy-v.y);
+  if(prox>0){cx.translate(cxp,v.y+v.h/2);cx.scale(1+.1*prox,1+.1*prox);cx.translate(-cxp,-(v.y+v.h/2))}
+  DRAW[v.kind](v,p,Math.min(1.5,f*(1+.55*prox)),hold,age);
+  cx.restore();
   return true;
 }
 function draw(t){
   cx.clearRect(0,0,W,H);
-  drawGrid();
-  for(let i=0;i<cards.length;i++){
-    if(!drawCard(cards[i],t))cards[i]=spawnCard(i,t,1500+Math.random()*3000);
+  for(let i=0;i<vigs.length;i++){
+    if(!drawVig(vigs[i],t))vigs[i]=spawn(i,t,700+Math.random()*2200);
   }
-}
-function seedCards(now){
-  nCards=W<720?2:3;
-  cards.length=0;
-  for(let i=0;i<nCards;i++)cards.push(spawnCard(i,now,i*5200));
 }
 let bgRaf=0;
 function loop(now){draw(now);bgRaf=requestAnimationFrame(loop)}
@@ -866,27 +1309,85 @@ document.addEventListener("visibilitychange",()=>{
   if(document.hidden){cancelAnimationFrame(bgRaf);bgRaf=0}
   else if(!bgRaf)bgRaf=requestAnimationFrame(loop);
 });
+window.addEventListener("scroll",()=>{SCY=window.scrollY},{passive:true});
+sizeBg();bgColors();
+for(let i=0;i<N_VIGS;i++){
+  const v=spawn(i,performance.now(),0);
+  v.born-=v.life*i*.19;
+  vigs.push(v);
+}
+window.addEventListener("resize",()=>{sizeBg();if(reduce)drawStatic()});
 function drawStatic(){
-  cards.forEach(c=>{c.born=-(c.typeEnd+OUT_DELAY+HOLD*.5)});
+  vigs.forEach(v=>{v.fixed=true;v.born=-1e9});
   draw(0);
 }
-sizeBg();bgColors();seedCards(performance.now());
-window.addEventListener("resize",()=>{sizeBg();seedCards(performance.now());if(reduce)drawStatic()});
 if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
-/* ══════════ MTH1W cursor: a pointer that gets a little long ══════════
-   Grade 9 keeps it simple: a small round-tipped pointer that trails a
-   short tail behind the direction of travel and lengthens a little with
-   speed, taking a link's colour while over it. Nothing else. */
+
+/* ══════════ MTH1W cursor: the fun dot ══════════
+   A dot with a ring that squashes and stretches with speed, leaving a
+   confetti trail of samples in the site's colours. Move fast and a
+   rise-over-run triangle appears from where you started. Stop hard after
+   a fast run and algebra tiles scatter. Over a link the link plays its
+   unit: a line with your (x, y) on it, a circle whose radius is your
+   distance from the centre, a number line reading a percent, algebra
+   tiles building x² + bx + c, tally marks counting as you cross, or
+   savings growing by the year. */
 const THEME={
-  samples:false,
-  subject(){return ""},
-  init(S){S.e={tailh:S.el("line","tailh"),tail:S.el("line","tail"),pt:S.el("circle","pt",{r:3.6})}},
-  burst(){},
+  samples:true,
+  subject(name){return /number/i.test(name)?"num":/algebra/i.test(name)?"alg":/relation/i.test(name)?"lin":/data/i.test(name)?"data":/geometry|measurement/i.test(name)?"geo":/financial/i.test(name)?"fin":""},
+  init(S){
+    const cs=getComputedStyle(document.documentElement);
+    S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;
+    S.e={tri:S.el("path","tri"),hyp:S.el("line","hyp"),fline:S.el("line","fline"),nl:S.el("path","nl"),tally:S.el("path","tally"),circ:S.el("circle","circ"),fdot:S.el("circle","fdot",{r:3.2}),tiles:[],rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5})};
+    for(let i=0;i<12;i++)S.e.tiles.push(S.el("rect","tile"));
+  },
+  sampleColor(S){return S.on?S.c:S.confetti[S.ci++%S.confetti.length]},
+  sample(){return{w:4.6}},
+  burst(S){
+    for(let i=0;i<10;i++){const a=Math.random()*6.283,v=2+Math.random()*3;S.drop(S.mx,S.my,S.confetti[i%6],850,{vx:Math.cos(a)*v,vy:Math.sin(a)*v,burst:true,w:7,rx:1,rot:Math.random()*90})}
+    for(let i=0;i<4;i++){const a=Math.random()*6.283,v=2+Math.random()*3;S.drop(S.mx,S.my,S.c,850,{vx:Math.cos(a)*v,vy:Math.sin(a)*v,burst:true,w:4,h:14,rx:1,rot:Math.random()*90})}
+  },
   frame(S){
-    const e=S.e,{mx,my,c,boost,sp}=S,L=7+2*boost+Math.min(sp,36)*.75,dx=-Math.cos(S.ang),dy=-Math.sin(S.ang);
-    [e.tailh,e.tail].forEach(l=>{l.setAttribute("x1",mx);l.setAttribute("y1",my);l.setAttribute("x2",mx+dx*L);l.setAttribute("y2",my+dy*L)});
-    e.tail.setAttribute("stroke",c);e.tail.setAttribute("stroke-width",2.4+boost);
-    e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.setAttribute("r",3.6+boost);e.pt.setAttribute("fill",c);
+    const e=S.e,{mx,my,c,boost,sp}=S,G=20,m=s=>s.replace("-","−"),q=Math.min(sp,30);
+    e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.setAttribute("r",4.5+2*boost);e.pt.setAttribute("fill",c);
+    e.rg.setAttribute("cx",mx);e.rg.setAttribute("cy",my);e.rg.setAttribute("rx",10+7*boost+q*.4);e.rg.setAttribute("ry",Math.max(5,10+7*boost-q*.15));
+    e.rg.setAttribute("transform",`rotate(${S.ang*180/Math.PI} ${mx} ${my})`);e.rg.setAttribute("stroke",c);
+    if(S.fast>0&&S.samples.length>=6){
+      const A=S.samples[0],run=Math.round((mx-A.x)/G),rise=Math.round((A.y-my)/G);
+      e.tri.setAttribute("d",`M${A.x} ${A.y}H${mx}V${my}`);e.tri.setAttribute("stroke",c);e.tri.style.opacity=S.fast*.8;
+      e.hyp.setAttribute("x1",A.x);e.hyp.setAttribute("y1",A.y);e.hyp.setAttribute("x2",mx);e.hyp.setAttribute("y2",my);e.hyp.setAttribute("stroke",c);e.hyp.style.opacity=S.fast*.85;
+      S.label=run===0?"rise/run: straight up!":`rise/run = ${m(String(rise))}/${m(String(run))}`;S.labelOp=S.fast;
+    }else{e.tri.style.opacity=0;e.hyp.style.opacity=0}
+    ["fline","nl","tally","circ","fdot"].forEach(k=>e[k].style.opacity=0);e.tiles.forEach(t=>t.style.opacity=0);
+    if(!(S.on&&S.kind&&S.rect))return;
+    const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),yb=r.bottom+6,lo=(boost-.5)*2;
+    if(S.kind==="lin"){
+      const h=12+5*boost;e.fline.setAttribute("x1",r.left-6);e.fline.setAttribute("y1",yb+h);e.fline.setAttribute("x2",r.right+6);e.fline.setAttribute("y2",yb);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.9;
+      e.fdot.setAttribute("cx",mx);e.fdot.setAttribute("cy",yb+h-(mx-r.left+6)/(r.width+12)*h);e.fdot.setAttribute("fill",c);e.fdot.style.opacity=boost;
+      const x=Math.round(u*8);if(boost>.5){S.label=`y = 2x + 1 → (${x}, ${2*x+1})`;S.labelOp=lo}
+    }else if(S.kind==="geo"){
+      const rad=Math.hypot(mx-c0,my-cy);e.circ.setAttribute("cx",c0);e.circ.setAttribute("cy",cy);e.circ.setAttribute("r",rad);e.circ.setAttribute("stroke",c);e.circ.style.opacity=boost*.8;
+      e.fline.setAttribute("x1",c0);e.fline.setAttribute("y1",cy);e.fline.setAttribute("x2",mx);e.fline.setAttribute("y2",my);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.6;
+      const R=rad/G;if(boost>.5){S.label=`r = ${R.toFixed(1)}  A = πr² ≈ ${(Math.PI*R*R).toFixed(1)}`;S.labelOp=lo}
+    }else if(S.kind==="num"){
+      let d=`M${r.left} ${yb+6}H${r.right}`;for(let i=0;i<=4;i++){const x=r.left+r.width*i/4;d+=`M${x} ${yb+2}V${yb+10}`}
+      e.nl.setAttribute("d",d);e.nl.setAttribute("stroke",c);e.nl.style.opacity=boost*.8;
+      e.fdot.setAttribute("cx",mx);e.fdot.setAttribute("cy",yb+6);e.fdot.setAttribute("fill",c);e.fdot.style.opacity=boost;
+      if(boost>.5){S.label=`${u.toFixed(2)} = ${Math.round(u*100)}%`;S.labelOp=lo}
+    }else if(S.kind==="alg"){
+      const k=1+Math.floor(u*3.99),n=1+Math.floor(u*5.99);let x=r.left,i=0;
+      const put=(w,h)=>{const t=e.tiles[i++];if(!t)return;t.setAttribute("x",x);t.setAttribute("y",yb+14-h);t.setAttribute("width",w);t.setAttribute("height",h);t.setAttribute("fill",c);t.style.opacity=boost*.8;x+=w+2};
+      put(14,14);for(let j=0;j<k;j++)put(4,14);for(let j=0;j<n;j++)put(4,4);
+      if(boost>.5){S.label=`x² + ${k}x + ${n}`;S.labelOp=lo}
+    }else if(S.kind==="data"){
+      const n=1+Math.floor(u*11.99);let d="",x=r.left;
+      for(let i=1;i<=n;i++){if(i%5===0){d+=`M${x-22} ${yb+12}L${x+2} ${yb+2}`;x+=8}else{d+=`M${x} ${yb+2}V${yb+12}`;x+=5}}
+      e.tally.setAttribute("d",d);e.tally.setAttribute("stroke",c);e.tally.style.opacity=boost*.9;
+      if(boost>.5){S.label=`tally: ${n}`;S.labelOp=lo}
+    }else if(S.kind==="fin"){
+      const t=Math.round(u*10);e.fline.setAttribute("x1",r.left);e.fline.setAttribute("y1",yb+4);e.fline.setAttribute("x2",r.left+r.width*u);e.fline.setAttribute("y2",yb+4);e.fline.setAttribute("stroke",c);e.fline.style.opacity=boost*.9;
+      if(boost>.5){S.label=`$1000 at 5% for ${t} y → $${1000+50*t}`;S.labelOp=lo}
+    }
   }
 };
 
@@ -962,7 +1463,7 @@ const THEME={
     S.boost+=((S.on?1:0)-S.boost)*.2;
     S.c=S.on&&tcol?tcol:accent();
     S.fast=Math.max(0,Math.min(1,(S.sp-FAST)/12));
-    if(THEME.samples&&S.sp>.8&&!hide&&Math.hypot(S.mx-ldx,S.my-ldy)>=10){S.drop(S.mx,S.my,S.c,1400,THEME.sample?THEME.sample(S):null);ldx=S.mx;ldy=S.my}
+    if(THEME.samples&&S.sp>.8&&!hide&&Math.hypot(S.mx-ldx,S.my-ldy)>=10){S.drop(S.mx,S.my,THEME.sampleColor?THEME.sampleColor(S):S.c,1400,THEME.sample?THEME.sample(S):null);ldx=S.mx;ldy=S.my}
     pk=Math.max(S.sp,pk*.94);
     if(pk>26&&S.sp<5&&!burst){burst=true;THEME.burst(S)}
     if(pk<10)burst=false;
@@ -988,7 +1489,6 @@ const THEME={
     if(svg.classList.contains("on"))raf=requestAnimationFrame(tick);
   }
 })();
-
 </script>
 </body>
 </html>
