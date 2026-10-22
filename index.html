@@ -69,6 +69,9 @@ body.vc #vcur{display:block}
 #vcur.on .ghosts,#vcur.on .theme,#vcur.on .hud{opacity:1}
 #vcur.hid .ghosts,#vcur.hid .theme,#vcur.hid .hud{opacity:0}
 #vcur .lbl{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;transition:opacity .15s}
+#vcur .skull,#vcur .haz{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.page.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,3px)}40%,60%{transform:translate(6px,-2px)}}
 #vcur .pt{stroke-width:1.8;transition:transform .12s;transform-origin:center;transform-box:fill-box}
 #vcur.dn .pt{transform:scale(1.5)}
 #vcur .rg{stroke-width:1.6;opacity:.75}
@@ -76,9 +79,6 @@ body.vc #vcur{display:block}
 #vcur .mk{fill:var(--bg);stroke-width:2;opacity:0}
 #vcur .ctext{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;opacity:0}
 #vcur .eq{font-size:12px}
-#vcur .skull,#vcur .haz{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-.page.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both}
-@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,3px)}40%,60%{transform:translate(6px,-2px)}}
 @media(hover:hover) and (pointer:fine){body.vc,body.vc *{cursor:none!important}body.vc input,body.vc textarea{cursor:auto!important}}
 .page{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 4rem;position:relative;z-index:1}
 
@@ -1349,20 +1349,19 @@ if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
    the two points and read the equation of the line through them. Lines
    stay (even when the pointer leaves the window) and you can draw more;
    hover one and it says "Click to remove line"; Escape cancels a pending
-   point, or clears all the lines. Over a link the dot stays the
-   same size and flips to reverse contrast (hollow dot, filled ring) in
-   the link's colour, with a short readout for the unit: (x, y) on
-   y = 2x + 1, a radius and area, a percent, x² + bx + c, a tally, or
-   simple interest. Over an answer key the pointer becomes a red skull
-   and crossbones and the page shakes; over a hazard-warned pill (the
-   calculator list) it becomes the warning triangle. */
+   point, or clears all the lines. Over a link the dot stays the same size
+   and flips to reverse contrast (hollow dot, filled ring) in the link's
+   colour, with a short readout for the unit: (x, y) on y = 2x + 1, a
+   radius and area, a percent, x² + bx + c, a tally, or simple interest.
+   The shared warning pointers (red skull and a shake on answer keys, the
+   triangle on the calculator pill) apply as everywhere. */
 const THEME={
   samples:true,
   subject(name){return /number/i.test(name)?"num":/algebra/i.test(name)?"alg":/relation/i.test(name)?"lin":/data/i.test(name)?"data":/geometry|measurement/i.test(name)?"geo":/financial/i.test(name)?"fin":""},
   init(S){
     const cs=getComputedStyle(document.documentElement);
     S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;S.bgN=0;
-    S.e={ln:S.el("line","ln"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull"),haz:S.el("g","haz")};
+    S.e={ln:S.el("line","ln"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5})};
     /* the line tool: lines live in the kept layer and stay until removed */
     S.lines=[];S.pend=null;S.origin=null;S.hover=-1;
     const G=20,m2=v=>String(v).replace(/-/g,"−"),gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
@@ -1399,20 +1398,6 @@ const THEME={
       else{S.lines.forEach(L=>L.g.remove());S.lines=[]}
       if(!S.lines.length&&!S.pend)S.origin=null;
     });
-    const hz=S.e.haz,mh=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);hz.appendChild(el);return el};
-    S.hz={tri:mh("path",{d:"M0 -11.5L12 9.5H-12Z","stroke-linejoin":"round","stroke-width":3}),bar:mh("rect",{x:-1.5,y:-4,width:3,height:7.5,rx:1.2}),dot:mh("circle",{cx:0,cy:6.3,r:1.7})};
-    /* the skull and crossbones: bones behind, head and jaw in front, the holes in the page colour */
-    const k=S.e.skull,mk=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);k.appendChild(el);return el};
-    S.sk={bones:[mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(45)"}),mk("rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(-45)"})],
-          knobs:[[-9.2,-9.2],[9.2,9.2],[-9.2,9.2],[9.2,-9.2]].map(([x,y])=>mk("circle",{cx:x,cy:y,r:2.4})),
-          head:mk("circle",{cx:0,cy:-2.2,r:7.2}),jaw:mk("rect",{x:-4.4,y:2.6,width:8.8,height:5.2,rx:1.6}),
-          holes:[mk("circle",{cx:-2.7,cy:-3,r:2}),mk("circle",{cx:2.7,cy:-3,r:2}),mk("path",{d:"M0 0.2L-1.2 2.2H1.2Z"}),
-                 mk("rect",{x:-3.2,y:4.6,width:1.1,height:2.4}),mk("rect",{x:-.55,y:4.6,width:1.1,height:2.4}),mk("rect",{x:2.1,y:4.6,width:1.1,height:2.4})]};
-  },
-  enter(S){
-    /* landing on an answer key shakes the page, the way MHF4U's bomb does */
-    const t=S.tgt;if(!t||t.closest("header"))return;
-    if(t.matches('.dlink.ans,.xans,.btn[data-warn]')){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}
   },
   sampleColor(S){return S.on?S.c:S.confetti[S.ci++%S.confetti.length]},
   sample(){return{w:4.6}},
@@ -1421,21 +1406,12 @@ const THEME={
     for(let i=0;i<4;i++){const a=Math.random()*6.283,v=2+Math.random()*3;S.drop(S.mx,S.my,S.c,850,{vx:Math.cos(a)*v,vy:Math.sin(a)*v,burst:true,w:4,h:14,rx:1,rot:Math.random()*90})}
   },
   frame(S){
-    const e=S.e,{mx,my,c,sp}=S,G=20,m=s=>s.replace("-","−"),q=Math.min(sp,30);
-    if(!S.bgN--){S.bgN=60;const cs=getComputedStyle(document.documentElement);S.bg=cs.getPropertyValue("--bg").trim();S.red=cs.getPropertyValue("--ans").trim()||"#cc3344";S.hazc=cs.getPropertyValue("--haz-fg").trim()||"#9a5a00";S.accent=cs.getPropertyValue("--accent").trim()}
-    const t=S.tgt,onAns=!!(S.on&&t&&t.matches('.dlink.ans,.xans,.btn[data-warn]')),onHaz=!!(S.on&&t&&t.matches('.ess a[data-warn]'));
-    /* the skull over an answer key; otherwise the dot and ring, reverse contrast on a link */
-    if(onAns){
-      e.skull.setAttribute("transform",`translate(${mx} ${my}) scale(1.15)`);e.skull.style.opacity=1;
-      [...S.sk.bones,...S.sk.knobs,S.sk.head,S.sk.jaw].forEach(el=>el.setAttribute("fill",S.red));
-      S.sk.holes.forEach(el=>el.setAttribute("fill",S.bg));
-      e.pt.style.opacity=0;e.rg.style.opacity=0;e.haz.style.opacity=0;
-    }else if(onHaz){
-      e.haz.setAttribute("transform",`translate(${mx} ${my})`);e.haz.style.opacity=1;
-      S.hz.tri.setAttribute("fill",S.hazc);S.hz.tri.setAttribute("stroke",S.hazc);S.hz.bar.setAttribute("fill",S.bg);S.hz.dot.setAttribute("fill",S.bg);
-      e.pt.style.opacity=0;e.rg.style.opacity=0;e.skull.style.opacity=0;
-    }else{
-      e.skull.style.opacity=0;e.haz.style.opacity=0;
+    const e=S.e,{mx,my,c,sp}=S,G=20,q=Math.min(sp,30);
+    if(!S.bgN--){S.bgN=60;const cs=getComputedStyle(document.documentElement);S.bg=cs.getPropertyValue("--bg").trim();S.red=cs.getPropertyValue("--ans").trim()||"#cc3344";S.accent=cs.getPropertyValue("--accent").trim()}
+    const warn=S.onAns||S.onHaz;
+    /* the shared warning pointers take over on answer keys and the calculator pill; otherwise the dot and ring, reverse contrast on a link */
+    if(warn){e.pt.style.opacity=0;e.rg.style.opacity=0}
+    else{
       e.pt.setAttribute("cx",mx);e.pt.setAttribute("cy",my);e.pt.style.opacity=1;
       e.rg.setAttribute("cx",mx);e.rg.setAttribute("cy",my);e.rg.setAttribute("rx",10+q*.4);e.rg.setAttribute("ry",Math.max(5,10-q*.15));
       e.rg.setAttribute("transform",`rotate(${S.ang*180/Math.PI} ${mx} ${my})`);e.rg.setAttribute("stroke",c);e.rg.style.opacity=.75;
@@ -1449,7 +1425,7 @@ const THEME={
     S.hover=-1;
     S.lines.forEach((L,i)=>{
       const A=vis(L.A),B=vis(L.B);
-      if(S.hover<0&&!S.on&&!onAns&&dseg(mx,my,A,B)<8)S.hover=i;
+      if(S.hover<0&&!S.on&&!warn&&dseg(mx,my,A,B)<8)S.hover=i;
       const hot=S.hover===i,c2=hot?S.red:ac;
       L.ln.setAttribute("x1",A[0]);L.ln.setAttribute("y1",A[1]);L.ln.setAttribute("x2",B[0]);L.ln.setAttribute("y2",B[1]);L.ln.setAttribute("stroke",c2);L.ln.setAttribute("stroke-dasharray",hot?"5 4":"none");
       place(L.mk[0],A[0],A[1]);place(L.mk[1],B[0],B[1]);L.mk.forEach(k=>k.setAttribute("stroke",c2));
@@ -1462,9 +1438,9 @@ const THEME={
       place(S.pend.mk,A[0],A[1]);S.pend.mk.setAttribute("stroke",ac);
       S.pend.lbl.textContent=`(${(""+S.pend.P.gx).replace("-","−")}, ${(""+S.pend.P.gy).replace("-","−")})`;put(S.pend.lbl,A[0]+8,A[1]-8);S.pend.lbl.setAttribute("fill",ac);
       e.ln.setAttribute("x1",A[0]);e.ln.setAttribute("y1",A[1]);e.ln.setAttribute("x2",mx);e.ln.setAttribute("y2",my);e.ln.setAttribute("stroke",ac);e.ln.style.opacity=1;
-      if(!S.on&&S.hover<0){S.label=`d = ${(Math.hypot(mx-A[0],my-A[1])/20).toFixed(1)}`;S.labelOp=1;S.labelColor=ac}
+      if(!S.on&&S.hover<0){S.label=`d = ${(Math.hypot(mx-A[0],my-A[1])/G).toFixed(1)}`;S.labelOp=1;S.labelColor=ac}
     }else e.ln.style.opacity=0;
-    if(!(S.on&&S.kind&&S.rect)||onAns||onHaz)return;
+    if(!(S.on&&S.kind&&S.rect)||warn)return;
     /* the readout for the unit, nothing drawn */
     const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),lo=(S.boost-.5)*2;
     if(S.boost<=.5)return;
@@ -1514,6 +1490,26 @@ const THEME={
     const name=u?u.querySelector(".utitle").textContent:(t.closest("#hero")&&heroEntry)?COURSE.units[heroEntry.u].name:"";
     return THEME.subject(name);
   }
+  /* warning pointers, shared by every site: a red skull and crossbones over an answer key (and the page shakes on
+     arrival), the warning triangle over a hazard-warned pill such as the calculator list. Themes hide their own glyph
+     while S.onAns or S.onHaz is set. */
+  const ANS='.dlink.ans,.xans,.btn[data-warn]',HAZ='.ess a[data-warn]';
+  S.wp=(()=>{
+    const g=S.el("g","skull"),mk=(parent,tag,attrs)=>{const el=document.createElementNS(NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);parent.appendChild(el);return el};
+    const sk={g,body:[mk(g,"rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(45)"}),mk(g,"rect",{x:-13,y:-2,width:26,height:3.6,rx:1.8,transform:"rotate(-45)"}),
+      ...[[-9.2,-9.2],[9.2,9.2],[-9.2,9.2],[9.2,-9.2]].map(([x,y])=>mk(g,"circle",{cx:x,cy:y,r:2.4})),mk(g,"circle",{cx:0,cy:-2.2,r:7.2}),mk(g,"rect",{x:-4.4,y:2.6,width:8.8,height:5.2,rx:1.6})],
+      holes:[mk(g,"circle",{cx:-2.7,cy:-3,r:2}),mk(g,"circle",{cx:2.7,cy:-3,r:2}),mk(g,"path",{d:"M0 0.2L-1.2 2.2H1.2Z"}),mk(g,"rect",{x:-3.2,y:4.6,width:1.1,height:2.4}),mk(g,"rect",{x:-.55,y:4.6,width:1.1,height:2.4}),mk(g,"rect",{x:2.1,y:4.6,width:1.1,height:2.4})]};
+    const h=S.el("g","haz"),hz={g:h,tri:mk(h,"path",{d:"M0 -11.5L12 9.5H-12Z","stroke-linejoin":"round","stroke-width":3}),bar:mk(h,"rect",{x:-1.5,y:-4,width:3,height:7.5,rx:1.2}),dot:mk(h,"circle",{cx:0,cy:6.3,r:1.7})};
+    return{sk,hz,n:0};
+  })();
+  function warnPointers(){
+    const w=S.wp;if(!w.n--){w.n=60;const cs=getComputedStyle(document.documentElement);w.bg=cs.getPropertyValue("--bg").trim();w.red=cs.getPropertyValue("--ans").trim()||"#cc3344";w.amber=cs.getPropertyValue("--haz-fg").trim()||"#9a5a00"}
+    const t=S.tgt;S.onAns=!!(S.on&&t&&t.matches(ANS));S.onHaz=!!(S.on&&t&&t.matches(HAZ));
+    if(S.onAns){w.sk.g.setAttribute("transform",`translate(${S.mx} ${S.my}) scale(1.15)`);w.sk.g.style.opacity=1;w.sk.body.forEach(el=>el.setAttribute("fill",w.red));w.sk.holes.forEach(el=>el.setAttribute("fill",w.bg))}
+    else w.sk.g.style.opacity=0;
+    if(S.onHaz){w.hz.g.setAttribute("transform",`translate(${S.mx} ${S.my})`);w.hz.g.style.opacity=1;w.hz.tri.setAttribute("fill",w.amber);w.hz.tri.setAttribute("stroke",w.amber);w.hz.bar.setAttribute("fill",w.bg);w.hz.dot.setAttribute("fill",w.bg)}
+    else w.hz.g.style.opacity=0;
+  }
   THEME.init(S);
   document.addEventListener("mousemove",e=>{
     S.mx=e.clientX;S.my=e.clientY;
@@ -1529,6 +1525,7 @@ const THEME={
       S.kind=t?subject(t):"";S.entered=performance.now();
       S.mx=e.clientX;S.my=e.clientY;S.now=performance.now();   // the pointer may have jumped here before its move event
       S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
+      if(t&&t.matches(ANS)){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes
       if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;THEME.burst(S)}   // a top-of-page control: the site's burst says hello
     }
   });
@@ -1573,6 +1570,7 @@ const THEME={
       if(g.sample)S.samples.unshift(g);   // oldest first
     }
     S.hide=hide;S.label="";S.labelAt=null;S.labelOp=null;S.labelColor=null;
+    warnPointers();
     THEME.frame(S);
     if(S.label&&(S.labelOp==null||S.labelOp>0)){
       txt.textContent=S.label;const at=S.labelAt||[S.mx+14,S.my-10];
