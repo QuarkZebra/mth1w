@@ -251,7 +251,10 @@ const COURSE = {
       ans:"", /* key: D("10dKX8nDuVJoUPQXhyBLP4ehZisLzLmTk") */
       extras:[["EQAO Questions", D("1oedUszxDLPtaXQiaBS7hO011B-NHgf5y"), "eqao"],
               ["Linear Function Word Problems", "https://www.youtube.com/watch?v=8F4mk4C73YU", "vid"]]},
-    {d:42, iso:"2026-11-02", topic:"Review", extras:[]},
+    {d:42, iso:"2026-11-02", topic:"Review", noteLabel:"Unit 3 Review",
+      note:D("15iz2XJOS3JtZR4KLMQQYxBHWGRoISE9w"),
+      ans:"", /* key: D("1S0lxbIWJ88xlcyst2Zb5LZOpo9QAlcMB") */
+      extras:[]},
     {d:43, iso:"2026-11-03", topic:"Unit 3 Test", flag:"test", extras:[]},
   ]},
 
@@ -291,7 +294,10 @@ const COURSE = {
               ["If/Else in Pseudocode", "https://www.youtube.com/watch?v=9U6lsT8f-hI", "vid"]]},
     {d:51, iso:"2026-11-13", topic:"Current Topics  &  Solving, Slope, and y = mx + b", flag:"quiz",
       extras:[]},
-    {d:52, iso:"2026-11-16", topic:"Review", extras:[]},
+    {d:52, iso:"2026-11-16", topic:"Review", noteLabel:"Unit 4 Review",
+      note:D("1zsTzdyRT-mnNe3SieUNcSSW_8uAzanb3"),
+      ans:"", /* key: D("1dEfys6adXIxPi8quexKFp1rx5o_TFDeW") */
+      extras:[]},
     {d:53, iso:"2026-11-17", topic:"Unit 4 Test", flag:"test", extras:[]},
   ]},
 
@@ -390,7 +396,10 @@ const COURSE = {
       ans:"", /* key: D("1lSKL_UHdtOHtuDXNrqNDWQjCTxa4pOMb") */
       extras:[["EQAO Questions", D("1cAEx77sg7KJJ6n5_B1gQsf7D-3aXjIb5"), "eqao"],
               ["Volumes of Composite Solids", "https://www.youtube.com/watch?v=I4VGICORQLE", "vid"]]},
-    {d:73, iso:"2026-12-16", topic:"Review", extras:[]},
+    {d:73, iso:"2026-12-16", topic:"Review", noteLabel:"Unit 6 Review",
+      note:D("1Xhq1vStXAjJ3vGcJavmmq_kNrHHEE44U"),
+      ans:"", /* key: D("1Q7pkAZmzH7P4v-1xT5EidVTESOXk7Wap") */
+      extras:[]},
     {d:74, iso:"2026-12-17", topic:"Unit 6 Test", flag:"test", extras:[]},
     {d:75, iso:"2026-12-18", topic:"Volume, Slope, and Like Terms", flag:"pquiz", extras:[]},
   ]},
@@ -430,7 +439,10 @@ const COURSE = {
               ["Comparing Two Savings Accounts", "https://www.youtube.com/watch?v=8xqmxdrDOcQ", "vid"]]},
     {d:82, iso:"2027-01-12", topic:"Current Topics  &  Exponent Laws and Percentages", flag:"quiz",
       extras:[]},
-    {d:83, iso:"2027-01-13", topic:"Review", extras:[]},
+    {d:83, iso:"2027-01-13", topic:"Review", noteLabel:"Unit 7 Review",
+      note:D("1JnT6I9dsDboeAoJJDcWnSOXHmzk5sZ1U"),
+      ans:"", /* key: D("1p4pHlVY9POXj1uL-LKrl8OMlECBQXxOA") */
+      extras:[]},
     {d:84, iso:"2027-01-14", topic:"Unit 7 Test", flag:"test", extras:[]},
   ]},
 
