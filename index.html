@@ -63,10 +63,11 @@ a{color:inherit;text-decoration:none}
   animation:aurora 52s ease-in-out infinite alternate;translate:var(--ax,0) var(--ay,0);transition:opacity .3s,translate .7s ease-out}
 @keyframes aurora{0%{transform:translate(0,0) rotate(0deg) scale(1)}50%{transform:translate(4%,-3%) rotate(7deg) scale(1.08)}100%{transform:translate(-3%,3%) rotate(-6deg) scale(1.04)}}
 /* The cursor (see the script at the end): an SVG overlay above everything */
-#vcur{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:1000;pointer-events:none;overflow:visible;display:none;opacity:0;transition:opacity .2s}
+#vcur{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:1000;pointer-events:none;overflow:visible;display:none}
 body.vc #vcur{display:block}
-#vcur.on{opacity:1}
-#vcur.hid{opacity:0}
+#vcur .ghosts,#vcur .theme,#vcur .hud{opacity:0;transition:opacity .2s}
+#vcur.on .ghosts,#vcur.on .theme,#vcur.on .hud{opacity:1}
+#vcur.hid .ghosts,#vcur.hid .theme,#vcur.hid .hud{opacity:0}
 #vcur .lbl{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;transition:opacity .15s}
 #vcur .pt{stroke-width:1.8;transition:transform .12s;transform-origin:center;transform-box:fill-box}
 #vcur.dn .pt{transform:scale(1.5)}
@@ -352,7 +353,7 @@ body.armed .fab{opacity:0;visibility:hidden;pointer-events:none;transform:transl
 <body>
 <div id="aurora" aria-hidden="true"></div>
 <canvas id="bg" aria-hidden="true"></canvas>
-<svg id="vcur" aria-hidden="true"><g class="ghosts"></g><g class="theme"></g><text class="lbl"></text></svg>
+<svg id="vcur" aria-hidden="true"><g class="keep"></g><g class="ghosts"></g><g class="theme"></g><g class="hud"><text class="lbl"></text></g></svg>
 <div class="page">
   <div class="top-bar" style="--i:0">
     <span class="lbl">Course</span>
@@ -1345,8 +1346,10 @@ if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
    plant a point on the grid (20 px squares, x right, y up from the bottom
    of the window at the first click): the pointer is tethered to it by a
    line with the distance read out; click again to fix the segment between
-   the two points and read the equation of the line through them. A third
-   click starts over; Escape clears. Over a link the dot stays the
+   the two points and read the equation of the line through them. Lines
+   stay (even when the pointer leaves the window) and you can draw more;
+   hover one and it says "Click to remove line"; Escape cancels a pending
+   point, or clears all the lines. Over a link the dot stays the
    same size and flips to reverse contrast (hollow dot, filled ring) in
    the link's colour, with a short readout for the unit: (x, y) on
    y = 2x + 1, a radius and area, a percent, x² + bx + c, a tally, or
@@ -1359,18 +1362,43 @@ const THEME={
   init(S){
     const cs=getComputedStyle(document.documentElement);
     S.confetti=["sk","vi","co","am","gn","tq"].map(k=>"rgb("+cs.getPropertyValue("--pal-"+k).trim()+")");S.ci=0;S.bgN=0;
-    S.e={ln:S.el("line","ln"),mk:[S.el("circle","mk",{r:4.5}),S.el("circle","mk",{r:4.5})],lbl:[S.el("text","ctext"),S.el("text","ctext")],eq:S.el("text","ctext eq"),
-         rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull"),haz:S.el("g","haz")};
-    /* the line tool */
-    S.pts=[];S.origin=null;
+    S.e={ln:S.el("line","ln"),rg:S.el("ellipse","rg",{rx:10,ry:10}),pt:S.el("circle","pt",{r:4.5}),skull:S.el("g","skull"),haz:S.el("g","haz")};
+    /* the line tool: lines live in the kept layer and stay until removed */
+    S.lines=[];S.pend=null;S.origin=null;S.hover=-1;
+    const G=20,m2=v=>String(v).replace(/-/g,"−"),gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+    const snap=e=>{const gx=Math.round((e.clientX+scrollX-S.origin.x)/G),gy=Math.round((S.origin.y-e.clientY-scrollY)/G);return{gx,gy,px:S.origin.x+gx*G,py:S.origin.y-gy*G}};
+    const mkPoint=(P)=>({mk:S.el("circle","mk",{r:4.5,style:"opacity:1"},S.keep),lbl:S.el("text","ctext",{style:"opacity:1"},S.keep),P});
+    S.equation=(P,Q)=>{
+      const dx=Q.gx-P.gx,dy=Q.gy-P.gy;
+      if(dx===0)return `x = ${m2(P.gx)}`;
+      if(dy===0)return `y = ${m2(P.gy)}`;
+      let g=gcd(Math.abs(dy),Math.abs(dx)),p=dy/g,q=dx/g;if(q<0){p=-p;q=-q}
+      const ms=Math.abs(p)===1&&q===1?(p<0?"−":""):(q===1?m2(p):`${m2(p)}/${q}`);
+      let bn=P.gy*q-p*P.gx,bq=q;const g2=gcd(Math.abs(bn),bq);bn/=g2;bq/=g2;
+      const bs=bn===0?"":` ${bn<0?"−":"+"} ${bq===1?Math.abs(bn):Math.abs(bn)+"/"+bq}`;
+      return `y = ${ms}x${bs}`;
+    };
     document.addEventListener("click",e=>{
       if(!e.target||!e.target.closest||e.target.closest('a,button,input,textarea,select,[role="link"],.tipwrap,label'))return;
-      if(S.pts.length===2){S.pts=[];S.origin=null}
+      if(S.hover>=0){const L=S.lines.splice(S.hover,1)[0];L.g.remove();S.hover=-1;if(!S.lines.length&&!S.pend)S.origin=null;return}
       if(!S.origin){const pg=document.querySelector(".page").getBoundingClientRect();S.origin={x:pg.left+scrollX,y:scrollY+innerHeight}}
-      const G=20,gx=Math.round((e.clientX+scrollX-S.origin.x)/G),gy=Math.round((S.origin.y-e.clientY-scrollY)/G);
-      S.pts.push({gx,gy,px:S.origin.x+gx*G,py:S.origin.y-gy*G});
+      const pt=snap(e);
+      if(!S.pend){S.pend=mkPoint(pt);return}
+      const P=S.pend.P;if(P.gx===pt.gx&&P.gy===pt.gy)return;
+      const g=S.el("g","lineg",null,S.keep);
+      const L={A:P,B:pt,g,ln:S.el("line","ln",{style:"opacity:1"},g),mk:[S.el("circle","mk",{r:4.5,style:"opacity:1"},g),S.el("circle","mk",{r:4.5,style:"opacity:1"},g)],
+               lbl:[S.el("text","ctext",{style:"opacity:1"},g),S.el("text","ctext",{style:"opacity:1"},g)],eq:S.el("text","ctext eq",{style:"opacity:1"},g)};
+      const d=Math.hypot(pt.gx-P.gx,pt.gy-P.gy);
+      L.eq.textContent=`${S.equation(P,pt)}   d = ${Number.isInteger(d)?d:d.toFixed(1)}`;
+      L.lbl[0].textContent=`(${m2(P.gx)}, ${m2(P.gy)})`;L.lbl[1].textContent=`(${m2(pt.gx)}, ${m2(pt.gy)})`;
+      S.lines.push(L);S.pend.mk.remove();S.pend.lbl.remove();S.pend=null;
     });
-    document.addEventListener("keydown",e=>{if(e.key==="Escape"){S.pts=[];S.origin=null}});
+    document.addEventListener("keydown",e=>{
+      if(e.key!=="Escape")return;
+      if(S.pend){S.pend.mk.remove();S.pend.lbl.remove();S.pend=null}
+      else{S.lines.forEach(L=>L.g.remove());S.lines=[]}
+      if(!S.lines.length&&!S.pend)S.origin=null;
+    });
     const hz=S.e.haz,mh=(tag,attrs)=>{const el=document.createElementNS(S.NS,tag);for(const a in attrs)el.setAttribute(a,attrs[a]);hz.appendChild(el);return el};
     S.hz={tri:mh("path",{d:"M0 -11.5L12 9.5H-12Z","stroke-linejoin":"round","stroke-width":3}),bar:mh("rect",{x:-1.5,y:-4,width:3,height:7.5,rx:1.2}),dot:mh("circle",{cx:0,cy:6.3,r:1.7})};
     /* the skull and crossbones: bones behind, head and jaw in front, the holes in the page colour */
@@ -1414,37 +1442,28 @@ const THEME={
       if(S.on){e.pt.setAttribute("fill",S.bg);e.pt.setAttribute("stroke",c);e.rg.setAttribute("fill",c);e.rg.setAttribute("fill-opacity",.28)}
       else{e.pt.setAttribute("fill",c);e.pt.setAttribute("stroke",S.bg);e.rg.setAttribute("fill","none")}
     }
-    /* the line tool: one point tethers the pointer with its distance; two points fix the line and its equation */
-    const m2=s=>String(s).replace(/-/g,"−"),vis=p=>[p.px-scrollX,p.py-scrollY];
-    if(S.pts.length){
-      const A=vis(S.pts[0]),ac=S.accent;
-      e.mk[0].setAttribute("cx",A[0]);e.mk[0].setAttribute("cy",A[1]);e.mk[0].setAttribute("stroke",ac);e.mk[0].style.opacity=1;
-      e.lbl[0].textContent=`(${m2(S.pts[0].gx)}, ${m2(S.pts[0].gy)})`;e.lbl[0].setAttribute("x",A[0]+8);e.lbl[0].setAttribute("y",A[1]-8);e.lbl[0].setAttribute("fill",ac);e.lbl[0].style.opacity=1;
-      e.ln.setAttribute("x1",A[0]);e.ln.setAttribute("y1",A[1]);e.ln.setAttribute("stroke",ac);e.ln.style.opacity=1;
-      if(S.pts.length===1){
-        e.ln.setAttribute("x2",mx);e.ln.setAttribute("y2",my);e.mk[1].style.opacity=0;e.lbl[1].style.opacity=0;e.eq.style.opacity=0;
-        if(!S.on){S.label=`d = ${(Math.hypot(mx-A[0],my-A[1])/G).toFixed(1)}`;S.labelOp=1;S.labelColor=ac}
-      }else{
-        const B=vis(S.pts[1]),P=S.pts[0],Q=S.pts[1];
-        e.ln.setAttribute("x2",B[0]);e.ln.setAttribute("y2",B[1]);
-        e.mk[1].setAttribute("cx",B[0]);e.mk[1].setAttribute("cy",B[1]);e.mk[1].setAttribute("stroke",ac);e.mk[1].style.opacity=1;
-        e.lbl[1].textContent=`(${m2(Q.gx)}, ${m2(Q.gy)})`;e.lbl[1].setAttribute("x",B[0]+8);e.lbl[1].setAttribute("y",B[1]-8);e.lbl[1].setAttribute("fill",ac);e.lbl[1].style.opacity=1;
-        const dx=Q.gx-P.gx,dy=Q.gy-P.gy,gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
-        let eq;
-        if(dx===0)eq=`x = ${m2(P.gx)}`;
-        else if(dy===0)eq=`y = ${m2(P.gy)}`;
-        else{
-          let g=gcd(Math.abs(dy),Math.abs(dx)),p=dy/g,q=dx/g;if(q<0){p=-p;q=-q}
-          const ms=Math.abs(p)===1&&q===1?(p<0?"−":""):(q===1?m2(p):`${m2(p)}/${q}`);
-          let bn=P.gy*q-p*P.gx,bq=q;const g2=gcd(Math.abs(bn),bq);bn/=g2;bq/=g2;
-          const bs=bn===0?"":` ${bn<0?"−":"+"} ${bq===1?Math.abs(bn):Math.abs(bn)+"/"+bq}`;
-          eq=`y = ${ms}x${bs}`;
-        }
-        const d=Math.hypot(dx,dy);
-        e.eq.textContent=`${eq}   d = ${Number.isInteger(d)?d:d.toFixed(1)}`;
-        e.eq.setAttribute("x",(A[0]+B[0])/2+10);e.eq.setAttribute("y",(A[1]+B[1])/2-10);e.eq.setAttribute("fill",ac);e.eq.style.opacity=1;
-      }
-    }else{e.ln.style.opacity=0;e.mk.forEach(k=>k.style.opacity=0);e.lbl.forEach(l=>l.style.opacity=0);e.eq.style.opacity=0}
+    /* the line tool: kept lines follow the page; a pending point tethers the pointer with its distance */
+    const vis=p=>[p.px-scrollX,p.py-scrollY],ac=S.accent;
+    const place=(el,x,y)=>{el.setAttribute("cx",x);el.setAttribute("cy",y)},put=(el,x,y)=>{el.setAttribute("x",x);el.setAttribute("y",y)};
+    const dseg=(x,y,A,B)=>{const vx=B[0]-A[0],vy=B[1]-A[1],L2=vx*vx+vy*vy||1,t=Math.max(0,Math.min(1,((x-A[0])*vx+(y-A[1])*vy)/L2));return Math.hypot(x-A[0]-vx*t,y-A[1]-vy*t)};
+    S.hover=-1;
+    S.lines.forEach((L,i)=>{
+      const A=vis(L.A),B=vis(L.B);
+      if(S.hover<0&&!S.on&&!onAns&&dseg(mx,my,A,B)<8)S.hover=i;
+      const hot=S.hover===i,c2=hot?S.red:ac;
+      L.ln.setAttribute("x1",A[0]);L.ln.setAttribute("y1",A[1]);L.ln.setAttribute("x2",B[0]);L.ln.setAttribute("y2",B[1]);L.ln.setAttribute("stroke",c2);L.ln.setAttribute("stroke-dasharray",hot?"5 4":"none");
+      place(L.mk[0],A[0],A[1]);place(L.mk[1],B[0],B[1]);L.mk.forEach(k=>k.setAttribute("stroke",c2));
+      put(L.lbl[0],A[0]+8,A[1]-8);put(L.lbl[1],B[0]+8,B[1]-8);L.lbl.forEach(l=>l.setAttribute("fill",c2));
+      put(L.eq,(A[0]+B[0])/2+10,(A[1]+B[1])/2-10);L.eq.setAttribute("fill",c2);
+    });
+    if(S.hover>=0){S.label="Click to remove line";S.labelColor=S.red;S.labelOp=1}
+    if(S.pend){
+      const A=vis(S.pend.P);
+      place(S.pend.mk,A[0],A[1]);S.pend.mk.setAttribute("stroke",ac);
+      S.pend.lbl.textContent=`(${(""+S.pend.P.gx).replace("-","−")}, ${(""+S.pend.P.gy).replace("-","−")})`;put(S.pend.lbl,A[0]+8,A[1]-8);S.pend.lbl.setAttribute("fill",ac);
+      e.ln.setAttribute("x1",A[0]);e.ln.setAttribute("y1",A[1]);e.ln.setAttribute("x2",mx);e.ln.setAttribute("y2",my);e.ln.setAttribute("stroke",ac);e.ln.style.opacity=1;
+      if(!S.on&&S.hover<0){S.label=`d = ${(Math.hypot(mx-A[0],my-A[1])/20).toFixed(1)}`;S.labelOp=1;S.labelColor=ac}
+    }else e.ln.style.opacity=0;
     if(!(S.on&&S.kind&&S.rect)||onAns||onHaz)return;
     /* the readout for the unit, nothing drawn */
     const r=S.rect,c0=(r.left+r.right)/2,cy=(r.top+r.bottom)/2,u=Math.max(0,Math.min(1,(mx-r.left)/r.width)),lo=(S.boost-.5)*2;
@@ -1486,7 +1505,8 @@ const THEME={
     live.push(g);
   };
   S.gauss=()=>{let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s-3)/Math.SQRT1_2};
-  S.el=(tag,cls,attrs)=>{const e=document.createElementNS(NS,tag);if(cls)e.setAttribute("class",cls);for(const k in attrs||{})e.setAttribute(k,attrs[k]);S.layer.appendChild(e);return e};
+  S.el=(tag,cls,attrs,parent)=>{const e=document.createElementNS(NS,tag);if(cls)e.setAttribute("class",cls);for(const k in attrs||{})e.setAttribute(k,attrs[k]);(parent||S.layer).appendChild(e);return e};
+  S.keep=Q(".keep");   /* drawings that stay put when the pointer leaves the window */
   let px=-100,py=-100,ldx=-1e9,ldy=-1e9,pk=0,burst=false,seen=false,tgt=null,tcol="",hide=false,raf=0,last=0,acc="",accN=0;
   function accent(){if(!accN--){accN=30;acc=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()}return acc}
   function subject(t){
@@ -1516,6 +1536,7 @@ const THEME={
   document.documentElement.addEventListener("mouseleave",()=>{svg.classList.remove("on");tgt=null});
   document.documentElement.addEventListener("mouseenter",()=>{if(seen){svg.classList.add("on");if(!raf)raf=requestAnimationFrame(tick)}});
   window.addEventListener("blur",()=>svg.classList.remove("on"));
+  window.addEventListener("scroll",()=>{if(!raf)raf=requestAnimationFrame(tick)},{passive:true});   /* kept drawings follow the page even with the pointer away */
   document.addEventListener("mousedown",()=>svg.classList.add("dn"));
   document.addEventListener("mouseup",()=>svg.classList.remove("dn"));
   function tick(now){
