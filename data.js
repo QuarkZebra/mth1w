@@ -346,7 +346,9 @@ const COURSE = {
       extras:[["EQAO Questions", D("1CZ22cxDbCmrNa32J0DgsdKxUdle-IDwS"), "eqao"],
               ["Math Modelling: Analysis", "https://www.youtube.com/watch?v=EpnSdicc8hw", "vid"],
               ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"]]},
-    {d:63, iso:"2026-12-02", topic:"Modelling Project · Presentations", extras:[]},
+    {d:63, iso:"2026-12-02", topic:"Modelling Project · Presentations",
+      extras:[["Unit 5 Review", D("1K52-T-tfDsgCwKElKvEO4hlbl_l34kPo"), "doc"],
+              ["Answers", D("1uoRNLs19D7INCnZ-_IovXLHxLIjfpyBD"), "ans"]]},
   ]},
 
   /* ── UNIT 6 ─────────────────────────────────────────────── */
