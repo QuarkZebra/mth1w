@@ -223,7 +223,7 @@ const COURSE = {
       extras:[]},
     {d:36, iso:"2026-10-23", topic:"Slope", num:"3.4",
       note:D("1ayoshLHx2OuaPLqHMvNC8X25ObDikv-_"),
-      ans:"", /* key: D("1vzKI8I3WeWkA7i5xSWGSdsPNNjZoL98p") */
+      ans:D("1vzKI8I3WeWkA7i5xSWGSdsPNNjZoL98p"), /* key: D("1vzKI8I3WeWkA7i5xSWGSdsPNNjZoL98p") */
       extras:[["EQAO Questions", D("1d_U3drnkVnJ9go2TKPQCorcUXcwT-04Z"), "eqao"],
               ["How to Find the Slope of a Line", "https://www.youtube.com/watch?v=QVdelg2-Zzk", "vid"]]},
     {d:37, iso:"2026-10-26", topic:"y = mx + b", num:"3.5",
