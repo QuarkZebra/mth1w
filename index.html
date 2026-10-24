@@ -1542,7 +1542,7 @@ const THEME={
       S.kind=t?subject(t):"";S.entered=performance.now();
       S.mx=e.clientX;S.my=e.clientY;S.now=performance.now();   // the pointer may have jumped here before its move event
       S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
-      if(t&&t.matches(ANS)&&performance.now()-shakeT>1500){shakeT=performance.now();const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes (once; the shake moves the link out from under the pointer and back, so a cooldown stops it re-triggering itself)
+      if(t&&t.matches(ANS)&&performance.now()-shakeT>550){shakeT=performance.now();const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes (once; the shake moves the link out from under the pointer and back, so a cooldown stops it re-triggering itself)
       if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;(THEME.hello||THEME.burst)(S)}   // a top-of-page control: the site's hello (or its burst) greets the pointer
     }
   });
