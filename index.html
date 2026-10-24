@@ -1480,7 +1480,7 @@ const THEME={
   const gwrap=Q(".ghosts"),txt=Q(".lbl");
   const SEL='a,button,[role="link"],.dlink.pend,.tipwrap',FAST=14;
   const pool=[],live=[];
-  for(let i=0;i<180;i++){const r=document.createElementNS(NS,"rect");r.style.opacity=0;gwrap.appendChild(r);pool.push({el:r})}
+  for(let i=0;i<260;i++){const r=document.createElementNS(NS,"rect");r.style.opacity=0;gwrap.appendChild(r);pool.push({el:r})}
   const S={mx:-100,my:-100,vx:0,vy:0,sp:0,ang:-2.3,fast:0,boost:0,on:false,rect:null,kind:"",c:"",now:0,samples:[],label:"",layer:Q(".theme"),NS};
   /* o: {vx,vy,w,h,rx,rot,grow,gy,drag,op,tw,streak,burst} — streak orients the
      particle along its velocity with a length that follows its speed */
@@ -1494,7 +1494,7 @@ const THEME={
   S.gauss=()=>{let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s-3)/Math.SQRT1_2};
   S.el=(tag,cls,attrs,parent)=>{const e=document.createElementNS(NS,tag);if(cls)e.setAttribute("class",cls);for(const k in attrs||{})e.setAttribute(k,attrs[k]);(parent||S.layer).appendChild(e);return e};
   S.keep=Q(".keep");   /* drawings that stay put when the pointer leaves the window */
-  let px=-100,py=-100,ldx=-1e9,ldy=-1e9,pk=0,burst=false,seen=false,tgt=null,tcol="",hide=false,raf=0,last=0,acc="",accN=0;
+  let px=-100,py=-100,ldx=-1e9,ldy=-1e9,pk=0,burst=false,seen=false,tgt=null,tcol="",hide=false,raf=0,last=0,acc="",accN=0,shakeT=-1e9;
   function accent(){if(!accN--){accN=30;acc=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()}return acc}
   function subject(t){
     const u=t.closest(".unit");
@@ -1536,8 +1536,8 @@ const THEME={
       S.kind=t?subject(t):"";S.entered=performance.now();
       S.mx=e.clientX;S.my=e.clientY;S.now=performance.now();   // the pointer may have jumped here before its move event
       S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
-      if(t&&t.matches(ANS)){const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes
-      if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;THEME.burst(S)}   // a top-of-page control: the site's burst says hello
+      if(t&&t.matches(ANS)&&performance.now()-shakeT>1500){shakeT=performance.now();const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes (once; the shake moves the link out from under the pointer and back, so a cooldown stops it re-triggering itself)
+      if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;(THEME.hello||THEME.burst)(S)}   // a top-of-page control: the site's hello (or its burst) greets the pointer
     }
   });
   document.addEventListener("mouseout",e=>{if(!e.relatedTarget){tgt=null;hide=false}});
