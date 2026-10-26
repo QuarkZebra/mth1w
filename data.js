@@ -228,7 +228,7 @@ const COURSE = {
               ["How to Find the Slope of a Line", "https://www.youtube.com/watch?v=QVdelg2-Zzk", "vid"]]},
     {d:37, iso:"2026-10-26", topic:"y = mx + b", num:"3.5",
       note:D("1R_TtmARjdijhIjQ8KUo0Ywkm61mb7TPU"),
-      ans:"", /* key: D("1uMvoWo86e8x51SbzCAqfjxyeRkA_QDYQ") */
+      ans:D("1uMvoWo86e8x51SbzCAqfjxyeRkA_QDYQ"), /* key: D("1uMvoWo86e8x51SbzCAqfjxyeRkA_QDYQ") */
       extras:[["EQAO Questions", D("1iOwPLVqj4qTLqCsul7Vw7OnXCk_LcN7z"), "eqao"],
               ["Slope-Intercept Form: y = mx + b", "https://www.youtube.com/watch?v=qXX47hS2KLw", "vid"]]},
     {d:38, iso:"2026-10-27", topic:"Coding 4 · The Repeat Loop", num:"3.6",
