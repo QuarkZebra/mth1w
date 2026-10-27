@@ -450,11 +450,26 @@ const COURSE = {
 
   /* ── EQAO REVIEW ────────────────────────────────────────── */
   {name:"EQAO Review", noNumber:true, days:[
-    {d:85, iso:"2027-01-15", topic:"EQAO Review · Number and Algebra", extras:[]},
-    {d:86, iso:"2027-01-18", topic:"EQAO Review · Relations and Data", extras:[]},
-    {d:87, iso:"2027-01-19", topic:"EQAO Review · Geometry, Measurement and Finance", extras:[]},
-    {d:88, iso:"2027-01-20", topic:"EQAO Format Practice · The Sample Assessment", extras:[]},
-    {d:89, iso:"2027-01-21", topic:"Timed Full-Length Practice · Last Day", extras:[]},
+    {d:85, iso:"2027-01-15", topic:"EQAO Review · Number and Algebra", noteLabel:"EQAO Review",
+      note:D("1QSHaugWfZk7jjGAUSE-2crcy0EFqZ1Sy"),
+      ans:"", /* key: D("17jDNsmnrtSe_JqL4wzFu3S4IivNi7569") */
+      extras:[]},
+    {d:86, iso:"2027-01-18", topic:"EQAO Review · Relations and Data", noteLabel:"EQAO Review",
+      note:D("1Am3umpB9vpp4llqiLAN7QKUT9UlNwMVF"),
+      ans:"", /* key: D("1fPawx_Cf4UcHWM0Kc9qIA2XF7tCTHL-q") */
+      extras:[]},
+    {d:87, iso:"2027-01-19", topic:"EQAO Review · Geometry, Measurement and Finance", noteLabel:"EQAO Review",
+      note:D("1m5wH75jDczwibOtD8HbS6jj0JZDKaiR6"),
+      ans:"", /* key: D("1HwZMX73gQJtIxgIfSZ7yLbKW4uguIJj7") */
+      extras:[]},
+    {d:88, iso:"2027-01-20", topic:"EQAO Format Practice · The Sample Assessment", noteLabel:"Format Practice",
+      note:D("1Ks-8WN8D0qwN4SVeeyrK4QDhmkUSVxYd"),
+      ans:"", /* key: D("1v1jy0TuDYLLQy9lRU8B5mzfiJJejB_4w") */
+      extras:[["EQAO Online Sample Test", "https://eqao.com/the-assessments/grade-9-math", "eqao"]]},
+    {d:89, iso:"2027-01-21", topic:"EQAO Timed Practice · Last Day", noteLabel:"Timed Practice",
+      note:D("18w4kbjI4GQH4Bu7vwPxK83HyGCuGH56v"),
+      ans:"", /* key: D("19zXlf_C5ABozTqVhs9G0S26lrAxNjCGs") */
+      extras:[]},
   ]},
 
 ]};
