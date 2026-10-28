@@ -233,7 +233,7 @@ const COURSE = {
               ["Slope-Intercept Form: y = mx + b", "https://www.youtube.com/watch?v=qXX47hS2KLw", "vid"]]},
     {d:38, iso:"2026-10-27", topic:"Coding 4 · The Repeat Loop", num:"3.6",
       note:D("1t9fARx0gmbJQ1J3bDSs_T9r7LigKjd6B"),
-      ans:"", /* key: D("16sMaJrhxG7LtwohKrlHhFHl7AEN-gf6s") */
+      ans:D("16sMaJrhxG7LtwohKrlHhFHl7AEN-gf6s"), /* key: D("16sMaJrhxG7LtwohKrlHhFHl7AEN-gf6s") */
       extras:[["EQAO Questions", D("1qJ4e-JXb1tsCsqHYkTSNr-DNLeWz3pld"), "eqao"],
               ["Counting Loops in Pseudocode", "https://www.youtube.com/watch?v=w0iQ3-HvijA", "vid"]]},
     {d:39, iso:"2026-10-28", topic:"Equations from a Slope and a Point", num:"3.7",
