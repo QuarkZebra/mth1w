@@ -238,7 +238,7 @@ const COURSE = {
               ["Counting Loops in Pseudocode", "https://www.youtube.com/watch?v=w0iQ3-HvijA", "vid"]]},
     {d:39, iso:"2026-10-28", topic:"Equations from a Slope and a Point", num:"3.7",
       note:D("1-8Gszhofqq52p_UZRzlasbfG0NkExUFo"),
-      ans:"", /* key: D("1DDvwd8-Gg_5P3yIVzuA-HXH5P0LGm14W") */
+      ans:D("1DDvwd8-Gg_5P3yIVzuA-HXH5P0LGm14W"), /* key: D("1DDvwd8-Gg_5P3yIVzuA-HXH5P0LGm14W") */
       extras:[["EQAO Questions", D("10S8VX7CzDd8sbiv3rOdH7-ipSpsO5m_Q"), "eqao"],
               ["Equation of a Line from a Slope and a Point", "https://www.youtube.com/watch?v=H9ym0qevDRE", "vid"]]},
     {d:40, iso:"2026-10-29", topic:"Equations from Two Points", num:"3.8",
