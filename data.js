@@ -243,7 +243,7 @@ const COURSE = {
               ["Equation of a Line from a Slope and a Point", "https://www.youtube.com/watch?v=H9ym0qevDRE", "vid"]]},
     {d:40, iso:"2026-10-29", topic:"Equations from Two Points", num:"3.8",
       note:D("1Sh-JxzCZGX8jA470SwZx2Z-qSr42w6sW"),
-      ans:"", /* key: D("1rJsxz3Tzr2wg28PTAaJEgl-8sP-PrcaN") */
+      ans:D("1rJsxz3Tzr2wg28PTAaJEgl-8sP-PrcaN"), /* key: D("1rJsxz3Tzr2wg28PTAaJEgl-8sP-PrcaN") */
       extras:[["EQAO Questions", D("1TWEl4RjnbfY31L71cHfuNn8bTOycPDFs"), "eqao"],
               ["Equation of a Line from Two Points", "https://www.youtube.com/watch?v=1wekohJ5nqA", "vid"]]},
     {d:41, iso:"2026-10-30", topic:"Problem Solving with Linear Relations", num:"3.9",
