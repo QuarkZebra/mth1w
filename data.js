@@ -248,7 +248,7 @@ const COURSE = {
               ["Equation of a Line from Two Points", "https://www.youtube.com/watch?v=1wekohJ5nqA", "vid"]]},
     {d:41, iso:"2026-10-30", topic:"Problem Solving with Linear Relations", num:"3.9",
       note:D("1h12hrWIDXcgcXo9yhKOF8W2ViBxbTwsu"),
-      ans:"", /* key: D("10dKX8nDuVJoUPQXhyBLP4ehZisLzLmTk") */
+      ans:D("10dKX8nDuVJoUPQXhyBLP4ehZisLzLmTk"), /* key: D("10dKX8nDuVJoUPQXhyBLP4ehZisLzLmTk") */
       extras:[["EQAO Questions", D("1oedUszxDLPtaXQiaBS7hO011B-NHgf5y"), "eqao"],
               ["Linear Function Word Problems", "https://www.youtube.com/watch?v=8F4mk4C73YU", "vid"]]},
     {d:42, iso:"2026-11-02", topic:"Review", noteLabel:"Unit 3 Review",
