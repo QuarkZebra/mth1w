@@ -70,8 +70,6 @@ body.vc #vcur{display:block}
 #vcur.hid .ghosts,#vcur.hid .theme,#vcur.hid .hud{opacity:0}
 #vcur .lbl{font-family:var(--mono);font-size:10px;font-weight:600;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round;transition:opacity .15s}
 #vcur .skull,#vcur .haz{opacity:0;transition:opacity .12s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
-.page.shake{animation:shake .45s cubic-bezier(.36,.07,.19,.97) both}
-@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-6px,3px)}40%,60%{transform:translate(6px,-2px)}}
 #vcur .pt{stroke-width:1.8;transition:transform .12s;transform-origin:center;transform-box:fill-box}
 #vcur.dn .pt{transform:scale(1.5)}
 #vcur .rg{stroke-width:1.6;opacity:.75}
@@ -1370,7 +1368,7 @@ if(reduce)drawStatic();else bgRaf=requestAnimationFrame(loop);
    and flips to reverse contrast (hollow dot, filled ring) in the link's
    colour, with a short readout for the unit: (x, y) on y = 2x + 1, a
    radius and area, a percent, x² + bx + c, a tally, or simple interest.
-   The shared warning pointers (red skull and a shake on answer keys, the
+   The shared warning pointers (red skull on answer keys, the
    triangle on the calculator pill) apply as everywhere. */
 const THEME={
   samples:true,
@@ -1500,15 +1498,15 @@ const THEME={
   S.gauss=()=>{let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s-3)/Math.SQRT1_2};
   S.el=(tag,cls,attrs,parent)=>{const e=document.createElementNS(NS,tag);if(cls)e.setAttribute("class",cls);for(const k in attrs||{})e.setAttribute(k,attrs[k]);(parent||S.layer).appendChild(e);return e};
   S.keep=Q(".keep");   /* drawings that stay put when the pointer leaves the window */
-  let px=-100,py=-100,ldx=-1e9,ldy=-1e9,pk=0,burst=false,seen=false,tgt=null,tcol="",hide=false,raf=0,last=0,acc="",accN=0,shakeT=-1e9;
+  let px=-100,py=-100,ldx=-1e9,ldy=-1e9,pk=0,burst=false,seen=false,tgt=null,tcol="",hide=false,raf=0,last=0,acc="",accN=0;
   function accent(){if(!accN--){accN=30;acc=getComputedStyle(document.documentElement).getPropertyValue("--accent").trim()}return acc}
   function subject(t){
     const u=t.closest(".unit");
     const name=u?u.querySelector(".utitle").textContent:(t.closest("#hero")&&heroEntry)?COURSE.units[heroEntry.u].name:"";
     return THEME.subject(name);
   }
-  /* warning pointers, shared by every site: a red skull and crossbones over an answer key (and the page shakes on
-     arrival), the warning triangle over a hazard-warned pill such as the calculator list. Themes hide their own glyph
+  /* warning pointers, shared by every site: a red skull and crossbones over an answer key,
+     the warning triangle over a hazard-warned pill such as the calculator list. Themes hide their own glyph
      while S.onAns or S.onHaz is set. */
   const ANS='.dlink.ans,.xans,.btn[data-warn]',HAZ='.ess a[data-warn]';
   S.wp=(()=>{
@@ -1543,7 +1541,6 @@ const THEME={
       S.kind=t?subject(t):"";S.entered=performance.now();
       S.mx=e.clientX;S.my=e.clientY;S.now=performance.now();   // the pointer may have jumped here before its move event
       S.tgt=t;if(t&&THEME.enter)THEME.enter(S);
-      if(t&&t.matches(ANS)&&performance.now()-shakeT>550){shakeT=performance.now();const pg=document.querySelector(".page");pg.classList.remove("shake");void pg.offsetWidth;pg.classList.add("shake")}   // an answer key: the page shakes (once; the shake moves the link out from under the pointer and back, so a cooldown stops it re-triggering itself)
       if(t&&t.closest("header")){S.now=performance.now();S.mx=e.clientX;S.my=e.clientY;(THEME.hello||THEME.burst)(S)}   // a top-of-page control: the site's hello (or its burst) greets the pointer
     }
   });
