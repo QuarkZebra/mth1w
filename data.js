@@ -253,7 +253,7 @@ const COURSE = {
               ["Linear Function Word Problems", "https://www.youtube.com/watch?v=8F4mk4C73YU", "vid"]]},
     {d:42, iso:"2026-11-02", topic:"Review", noteLabel:"Unit 3 Review",
       note:D("15iz2XJOS3JtZR4KLMQQYxBHWGRoISE9w"),
-      ans:"", /* key: D("1S0lxbIWJ88xlcyst2Zb5LZOpo9QAlcMB") */
+      ans:D("1S0lxbIWJ88xlcyst2Zb5LZOpo9QAlcMB"), /* key: D("1S0lxbIWJ88xlcyst2Zb5LZOpo9QAlcMB") */
       extras:[]},
     {d:43, iso:"2026-11-03", topic:"Unit 3 Test", flag:"test", extras:[]},
   ]},
