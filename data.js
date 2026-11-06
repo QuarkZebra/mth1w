@@ -30,7 +30,7 @@
 
    To SAVE TIME: (Just change the message)
 
-   git add . && git commit -m "coding 3 key add" && git push origin main
+   git add . && git commit -m "4.1 key add" && git push origin main
 
    ═══════════════════════════════════════════════════════════ */
 
@@ -264,7 +264,7 @@ const COURSE = {
       extras:[]},
     {d:45, iso:"2026-11-05", topic:"Ordered Pairs, Plotting, and Satisfying a Relation", num:"4.1",
       note:D("14IPrPBqyRb__KiEa4CE3NGJ1aBf9Aeio"),
-      ans:"", /* key: D("1tWUkCq7SYZLQs-UGZsl-XipUvAZH5i15") */
+      ans:D("1tWUkCq7SYZLQs-UGZsl-XipUvAZH5i15"), /* key: D("1tWUkCq7SYZLQs-UGZsl-XipUvAZH5i15") */
       extras:[["EQAO Questions", D("1i5eqqLbNcTNsjtTJ1ak1nDiLZwx7VUYv"), "eqao"],
               ["Ordered Pairs That Satisfy an Equation", "https://www.youtube.com/watch?v=6MfdfNtDCbs", "vid"]]},
     {d:46, iso:"2026-11-06", topic:"Intercepts and Equations ax + by = k", num:"4.2",
