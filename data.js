@@ -274,7 +274,7 @@ const COURSE = {
               ["Intercepts from Standard Form", "https://www.youtube.com/watch?v=_YnnE0s-T8Y", "vid"]]},
     {d:47, iso:"2026-11-09", topic:"Translations and Reflections of Lines", num:"4.3",
       note:D("1L3BGJ6TrkYtR_8YV8fECATUUExDFMRQI"),
-      ans:"", /* key: D("1QblhHzLyBd8qZpRiDxvsh5hnA5itsIJS") */
+      ans:D("1QblhHzLyBd8qZpRiDxvsh5hnA5itsIJS"), /* key: D("1QblhHzLyBd8qZpRiDxvsh5hnA5itsIJS") */
       extras:[["EQAO Questions", D("1Yw7KBlFqi5Rxz7J0DltY-3t5jZMKNiCy"), "eqao"],
               ["Transforming Linear Functions", "https://www.youtube.com/watch?v=q3tFRKOIxLo", "vid"]]},
     {d:48, iso:"2026-11-10", topic:"Rotations of Lines about the Origin", num:"4.4",
