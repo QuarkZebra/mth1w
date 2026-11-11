@@ -279,7 +279,7 @@ const COURSE = {
               ["Transforming Linear Functions", "https://www.youtube.com/watch?v=q3tFRKOIxLo", "vid"]]},
     {d:48, iso:"2026-11-10", topic:"Rotations of Lines about the Origin", num:"4.4",
       note:D("1yWw2cXsbx6zFObtYPjoRV2tmhlYueDHq"),
-      ans:"", /* key: D("1-pn0pg1KhsBs1FC3ulRtAgCzq2UUIU07") */
+      ans:D("1-pn0pg1KhsBs1FC3ulRtAgCzq2UUIU07"), /* key: D("1-pn0pg1KhsBs1FC3ulRtAgCzq2UUIU07") */
       extras:[["EQAO Questions", D("1RuAIQccFfMvROZ448g4bb8_c3YuLYmYS"), "eqao"],
               ["Rotating a Line 90° About the Origin", "https://www.youtube.com/watch?v=_wm5AiFIGUw", "vid"]]},
     {d:49, iso:"2026-11-11", topic:"Non-Linear Relations: xy = k and Quadratic Shapes", num:"4.5",
