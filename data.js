@@ -284,7 +284,7 @@ const COURSE = {
               ["Rotating a Line 90° About the Origin", "https://www.youtube.com/watch?v=_wm5AiFIGUw", "vid"]]},
     {d:49, iso:"2026-11-11", topic:"Non-Linear Relations: xy = k and Quadratic Shapes", num:"4.5",
       note:D("1DTl7D22IIluI-mywe4PtyPlJcE3OtpPB"),
-      ans:"", /* key: D("1_WVGmwabkDEidty0xgRL__bZYST47icR") */
+      ans:D("1_WVGmwabkDEidty0xgRL__bZYST47icR"), /* key: D("1_WVGmwabkDEidty0xgRL__bZYST47icR") */
       extras:[["EQAO Questions", D("1bsX-f1xieKIcUiDatL10fN8eOVObR5KA"), "eqao"],
               ["Inverse Variation", "https://www.youtube.com/watch?v=lbAgiD1X-LE", "vid"]]},
     {d:50, iso:"2026-11-12", topic:"Coding 5 · If/Else: On, Above or Below the Line?", num:"4.6",
