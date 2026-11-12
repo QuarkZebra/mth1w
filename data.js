@@ -289,7 +289,7 @@ const COURSE = {
               ["Inverse Variation", "https://www.youtube.com/watch?v=lbAgiD1X-LE", "vid"]]},
     {d:50, iso:"2026-11-12", topic:"Coding 5 · If/Else: On, Above or Below the Line?", num:"4.6",
       note:D("1X77mIWvc14bH_IHcFPOuMq3kS98ohm4K"),
-      ans:"", /* key: D("1AQ-EWYptGEgU2jzyhrbkVp_zCRUXFWU_") */
+      ans:D("1AQ-EWYptGEgU2jzyhrbkVp_zCRUXFWU_"), /* key: D("1AQ-EWYptGEgU2jzyhrbkVp_zCRUXFWU_") */
       extras:[["EQAO Questions", D("1K-4aJ5cnqggDe_haa5XsMEc-RpTLjE14"), "eqao"],
               ["If/Else in Pseudocode", "https://www.youtube.com/watch?v=9U6lsT8f-hI", "vid"]]},
     {d:51, iso:"2026-11-13", topic:"Current Topics  &  Solving, Slope, and y = mx + b", flag:"quiz",
