@@ -403,7 +403,9 @@ const COURSE = {
       ans:"", /* key: D("1Q7pkAZmzH7P4v-1xT5EidVTESOXk7Wap") */
       extras:[]},
     {d:74, iso:"2026-12-17", topic:"Unit 6 Test", flag:"test", extras:[]},
-    {d:75, iso:"2026-12-18", topic:"Volume, Slope, and Like Terms", flag:"pquiz", extras:[]},
+    /* Winter Escape pack deliberately NOT posted (puzzle day, no reading ahead).
+       Pack: D("1K57U-cbp7DZH3TrFjWoekrN12C09jR5u")  Teacher key: D("1ykVg1rORlHpK9plXwtbMJiCFGdAS9JBx") */
+    {d:75, iso:"2026-12-18", topic:"Winter Escape", extras:[]},
   ]},
 
   /* ── UNIT 7 ─────────────────────────────────────────────── */
