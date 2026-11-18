@@ -305,7 +305,7 @@ const COURSE = {
   {name:"Data and Modelling", days:[
     {d:54, iso:"2026-11-18", topic:"How Data Is Collected", num:"5.1",
       note:D("15C7NDpK2ljXAHhfAfad6jfvkttf6m5zU"),
-      ans:"", /* key: D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD") */
+      ans:D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD"), /* key: D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD") */
       extras:[["EQAO Questions", D("1wRUQIOl-3DC4KxdkC9o0m5MjjiVX94zR"), "eqao"],
               ["What Is Sampling?", "https://www.youtube.com/watch?v=qhzkCebkSWE", "vid"]]},
     {d:55, iso:"2026-11-19", topic:"One-Variable Data", num:"5.2",
