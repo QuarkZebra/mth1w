@@ -312,16 +312,19 @@ const COURSE = {
       note:D("1cOt7LxQmpwLQnRGIzZOvBPX4pv-fYbf4"),
       ans:"", /* key: D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia") */
       extras:[["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
+              ["Skills Session: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "doc"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
               ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"]]},
     {d:56, iso:"2026-11-20", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
       note:D("14HOEb02eKMcSETLHaKFglf92tfBWJGd4"),
       ans:"", /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
       extras:[["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
+              ["Skills Session: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "doc"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
               ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"]]},
     {d:57, iso:"2026-11-24", topic:"Coding 6 · The Accumulator: Totals and Means", num:"5.4",
       note:D("1AwL5jN7xAUgYmS1O3LuQspMikBWjfe4c"),
       ans:"", /* key: D("1FUHwaaHKNRa_DMzuYNCMVRFVne9xMTUk") */
       extras:[["EQAO Questions", D("1Uo9r8PLGSRtXJAmXXj-Uorq-GViSJTrk"), "eqao"],
+              ["Skills Session: Running Totals and Fair Shares", D("1_03hdTPAloKC2KS0cMFKHKmzVE6EpLN3"), "doc"], /* skills key: D("1ZVCXSX0Bh1dGtTDtPwH30F_fKS-Y4NFe") */
               ["Keeping a Running Total", "https://www.youtube.com/watch?v=x8e_od727XQ", "vid"]]},
     {d:58, iso:"2026-11-25", topic:"The Modelling Process: Understanding the Situation", num:"5.5",
       note:D("11H6ruRFRdrW0y46bSrdtNcTK661syXkP"),
@@ -339,11 +342,13 @@ const COURSE = {
       note:D("1TWfSPTi6hDrWHGKV04NmmopbX62CSG7E"),
       ans:"", /* key: D("1n1GGQp6QN9X3xqsCbZAFkWr5bh4CwT5y") */
       extras:[["EQAO Questions", D("1uaVdKh2XcB959qHTh5DJibXwUFZoUy3G"), "eqao"],
+              ["Skills Session: Tenths and Staying Inside the Data", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "doc"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
               ["Math Modelling: Getting a Solution", "https://www.youtube.com/watch?v=wwck9hVjlQc", "vid"]]},
     {d:62, iso:"2026-12-01", topic:"Modelling: Assessing and Reporting", num:"5.8",
       note:D("1Azgj9ROLUcAHoMNuqWFziyuQduNYsJUW"),
       ans:"", /* key: D("1Y6DSsND1NzNXq6G051J9XSkblQKqALZ3") */
       extras:[["EQAO Questions", D("1CZ22cxDbCmrNa32J0DgsdKxUdle-IDwS"), "eqao"],
+              ["Skills Session: Tenths and Staying Inside the Data", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "doc"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
               ["Math Modelling: Analysis", "https://www.youtube.com/watch?v=EpnSdicc8hw", "vid"],
               ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"]]},
     {d:63, iso:"2026-12-02", topic:"Modelling Project · Presentations",
