@@ -310,7 +310,7 @@ const COURSE = {
               ["What Is Sampling?", "https://www.youtube.com/watch?v=qhzkCebkSWE", "vid"]]},
     {d:55, iso:"2026-11-19", topic:"One-Variable Data", num:"5.2",
       note:D("1cOt7LxQmpwLQnRGIzZOvBPX4pv-fYbf4"),
-      ans:"", /* key: D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia") */
+      ans:D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia"), /* key: D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia") */
       extras:[["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
               ["Skills Session: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "doc"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
               ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"]]},
