@@ -318,7 +318,7 @@ const COURSE = {
       extras:[]},
     {d:57, iso:"2026-11-24", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
       note:D("14HOEb02eKMcSETLHaKFglf92tfBWJGd4"),
-      ans:"", /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
+      ans:D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8"), /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
       extras:[["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
               ["Skills Session: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "doc"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
               ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"]]},
