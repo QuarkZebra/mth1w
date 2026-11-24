@@ -314,18 +314,14 @@ const COURSE = {
       extras:[["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
               ["Skills Session: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "doc"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
               ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"]]},
-    {d:56, iso:"2026-11-20", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
+    {d:56, iso:"2026-11-20", topic:"Grade 9 Afternoon Event · No Class",
+      extras:[]},
+    {d:57, iso:"2026-11-24", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
       note:D("14HOEb02eKMcSETLHaKFglf92tfBWJGd4"),
       ans:"", /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
       extras:[["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
               ["Skills Session: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "doc"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
               ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"]]},
-    {d:57, iso:"2026-11-24", topic:"Coding 6 · The Accumulator: Totals and Means", num:"5.4",
-      note:D("1AwL5jN7xAUgYmS1O3LuQspMikBWjfe4c"),
-      ans:"", /* key: D("1FUHwaaHKNRa_DMzuYNCMVRFVne9xMTUk") */
-      extras:[["EQAO Questions", D("1Uo9r8PLGSRtXJAmXXj-Uorq-GViSJTrk"), "eqao"],
-              ["Skills Session: Running Totals and Fair Shares", D("1_03hdTPAloKC2KS0cMFKHKmzVE6EpLN3"), "doc"], /* skills key: D("1ZVCXSX0Bh1dGtTDtPwH30F_fKS-Y4NFe") */
-              ["Keeping a Running Total", "https://www.youtube.com/watch?v=x8e_od727XQ", "vid"]]},
     {d:58, iso:"2026-11-25", topic:"The Modelling Process: Understanding the Situation", num:"5.5",
       note:D("11H6ruRFRdrW0y46bSrdtNcTK661syXkP"),
       ans:"", /* key: D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok") */
@@ -441,42 +437,45 @@ const COURSE = {
       extras:[["EQAO Questions", D("13XbGJ0rRDoRr1Dt4Q0dMgD4yF2ktqcnU"), "eqao"],
               ["Simple vs Compound Interest", "https://www.youtube.com/watch?v=lMVwYoiiV0w", "vid"],
               ["How Principal and Interest Work in Loan Payments", "https://www.youtube.com/watch?v=JvEOX9DcZn8", "vid"]]},
-    {d:81, iso:"2027-01-11", topic:"Coding 7 · Comparing Two Financial Options", num:"7.6",
+    {d:81, iso:"2027-01-11", topic:"Coding 6 · The Accumulator: Totals and Means", num:"5.4",
+      note:D("1AwL5jN7xAUgYmS1O3LuQspMikBWjfe4c"),
+      ans:"", /* key: D("1FUHwaaHKNRa_DMzuYNCMVRFVne9xMTUk") */
+      extras:[["EQAO Questions", D("1Uo9r8PLGSRtXJAmXXj-Uorq-GViSJTrk"), "eqao"],
+              ["Skills Session: Running Totals and Fair Shares", D("1_03hdTPAloKC2KS0cMFKHKmzVE6EpLN3"), "doc"], /* skills key: D("1ZVCXSX0Bh1dGtTDtPwH30F_fKS-Y4NFe") */
+              ["Keeping a Running Total", "https://www.youtube.com/watch?v=x8e_od727XQ", "vid"]]},
+    {d:82, iso:"2027-01-12", topic:"Coding 7 · Comparing Two Financial Options", num:"7.6",
       note:D("12TwriVKgLLjpKdeg-RwNQOFOmPSOx9p7"),
       ans:"", /* key: D("1FtzcbKT-IBI_hmLEsJu8RWmT9TjcF6TU") */
       extras:[["EQAO Questions", D("1L7LKSA-FgHlmPT9pM8IKbibqDaIGQnyY"), "eqao"],
               ["Comparing Two Savings Accounts", "https://www.youtube.com/watch?v=8xqmxdrDOcQ", "vid"]]},
-    {d:82, iso:"2027-01-12", topic:"Current Topics  &  Exponent Laws and Percentages", flag:"quiz",
+    {d:83, iso:"2027-01-13", topic:"Current Topics  &  Exponent Laws and Percentages", flag:"quiz",
       extras:[]},
-    {d:83, iso:"2027-01-13", topic:"Review", noteLabel:"Unit 7 Review",
+    {d:84, iso:"2027-01-14", topic:"Review", noteLabel:"Unit 7 Review",
       note:D("1JnT6I9dsDboeAoJJDcWnSOXHmzk5sZ1U"),
       ans:"", /* key: D("1p4pHlVY9POXj1uL-LKrl8OMlECBQXxOA") */
       extras:[]},
-    {d:84, iso:"2027-01-14", topic:"Unit 7 Test", flag:"test", extras:[]},
+    {d:85, iso:"2027-01-15", topic:"Unit 7 Test", flag:"test", extras:[]},
   ]},
 
   /* ── EQAO REVIEW ────────────────────────────────────────── */
   {name:"EQAO Review", noNumber:true, days:[
-    {d:85, iso:"2027-01-15", topic:"EQAO Review · Number and Algebra", noteLabel:"EQAO Review",
+    {d:86, iso:"2027-01-18", topic:"EQAO Review · Number and Algebra", noteLabel:"EQAO Review",
       note:D("1QSHaugWfZk7jjGAUSE-2crcy0EFqZ1Sy"),
       ans:"", /* key: D("17jDNsmnrtSe_JqL4wzFu3S4IivNi7569") */
       extras:[]},
-    {d:86, iso:"2027-01-18", topic:"EQAO Review · Relations and Data", noteLabel:"EQAO Review",
+    {d:87, iso:"2027-01-19", topic:"EQAO Review · Relations and Data", noteLabel:"EQAO Review",
       note:D("1Am3umpB9vpp4llqiLAN7QKUT9UlNwMVF"),
       ans:"", /* key: D("1fPawx_Cf4UcHWM0Kc9qIA2XF7tCTHL-q") */
       extras:[]},
-    {d:87, iso:"2027-01-19", topic:"EQAO Review · Geometry, Measurement and Finance", noteLabel:"EQAO Review",
+    {d:88, iso:"2027-01-20", topic:"EQAO Review · Geometry, Measurement and Finance", noteLabel:"EQAO Review",
       note:D("1m5wH75jDczwibOtD8HbS6jj0JZDKaiR6"),
       ans:"", /* key: D("1HwZMX73gQJtIxgIfSZ7yLbKW4uguIJj7") */
       extras:[]},
-    {d:88, iso:"2027-01-20", topic:"EQAO Format Practice · The Sample Assessment", noteLabel:"Format Practice",
+    {d:89, iso:"2027-01-21", topic:"EQAO Format & Timed Practice · Last Day", noteLabel:"Format Practice",
       note:D("1Ks-8WN8D0qwN4SVeeyrK4QDhmkUSVxYd"),
       ans:"", /* key: D("1v1jy0TuDYLLQy9lRU8B5mzfiJJejB_4w") */
-      extras:[["EQAO Online Sample Test", "https://eqao.com/the-assessments/grade-9-math", "eqao"]]},
-    {d:89, iso:"2027-01-21", topic:"EQAO Timed Practice · Last Day", noteLabel:"Timed Practice",
-      note:D("18w4kbjI4GQH4Bu7vwPxK83HyGCuGH56v"),
-      ans:"", /* key: D("19zXlf_C5ABozTqVhs9G0S26lrAxNjCGs") */
-      extras:[]},
+      extras:[["EQAO Online Sample Test", "https://eqao.com/the-assessments/grade-9-math", "eqao"],
+              ["Timed Practice (extra)", D("18w4kbjI4GQH4Bu7vwPxK83HyGCuGH56v"), "doc"]]}, /* timed key: D("19zXlf_C5ABozTqVhs9G0S26lrAxNjCGs") */
   ]},
 
 ]};
