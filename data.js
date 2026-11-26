@@ -20,6 +20,9 @@
            kind = "doc" (worksheet/handout), "ans" (solutions,
            shows the ☠︎ warning), "vid" (video), "eqao" (the
            day's EQAO companion sheet — dark blue, ✎ icon).
+           "skills" (the day's Core Concepts sheet from the MTH1W
+           Skills packs: prerequisite practice, answers printed
+           on each page; teal, layers icon, listed first).
 
    D(id) is shorthand for a Google Drive link — paste either a
    full URL or D("fileId"), both work.
@@ -130,34 +133,40 @@ const COURSE = {
     {d:16, iso:"2026-09-23", topic:"Algebraic Expressions", num:"2.1",
       note:D("1Vj3FB9JTvftt7Qk_Xdwuh-yaxKi_eWRG"),
       ans:D("1c6VAc3b1MfMYMAjHxLg5cNl2Qf6jSr-1"), /* key: D("1c6VAc3b1MfMYMAjHxLg5cNl2Qf6jSr-1") */
-      extras:[["EQAO Questions", D("1NsWFWZLg1xj-Zbkt6OxeCZDiMsm7_f-V"), "eqao"],
+      extras:[["Core Concepts: Groups and Expressions", D("1vxHRYNcPybTJJyCacZUvETDOVDRmj7Nd"), "skills"],
+              ["EQAO Questions", D("1NsWFWZLg1xj-Zbkt6OxeCZDiMsm7_f-V"), "eqao"],
               ["Algebraic Substitution", "https://www.youtube.com/watch?v=XJmXvZdRRNQ", "vid"]]},
     {d:17, iso:"2026-09-24", topic:"Coding 2 · Input and Pseudocode", num:"2.2",
       note:D("1Xv8ybKK5rHTQhVYaO_NL0d_uiaGEI0TE"),
       ans:D("1Anx0z7QkvP6-wP-QRfc2ixCQu5Rw9taN"), /* key: D("1Anx0z7QkvP6-wP-QRfc2ixCQu5Rw9taN") */
-      extras:[["EQAO Questions", D("1O-lVhQouEJdpijAEnELQkos30rsBh9-g"), "eqao"],
+      extras:[["Core Concepts: Following a Program", D("1kVOmfOmzYzAnzl2iizvuuGirYTdFU-OS"), "skills"],
+              ["EQAO Questions", D("1O-lVhQouEJdpijAEnELQkos30rsBh9-g"), "eqao"],
               ["What Is Pseudocode?", "https://www.youtube.com/watch?v=qfckDdsEIq8", "vid"]]},
     {d:18, iso:"2026-09-25", topic:"Collecting Like Terms", num:"2.3",
       note:D("1b-XS_es2YeXxQuYAFAZnUslEbA48X25X"),
       ans:D("1ik0IoSRj0VHKrHpBr8h9NlHi8NVYcHUW"), /* key: D("1ik0IoSRj0VHKrHpBr8h9NlHi8NVYcHUW") */
-      extras:[["EQAO Questions", D("1vqPIqJTk8pWvMDphVPJ1xUBHNwmIAi5k"), "eqao"],
+      extras:[["Core Concepts: Combining Like Terms", D("1g4q2aEZegERZaphCb52NRGPryQIJa46O"), "skills"],
+              ["EQAO Questions", D("1vqPIqJTk8pWvMDphVPJ1xUBHNwmIAi5k"), "eqao"],
               ["Collecting Like Terms", "https://www.youtube.com/watch?v=g9VIuFYB98g", "vid"]]},
     {d:19, iso:"2026-09-28", topic:"Equivalent Expressions", num:"2.4",
       note:D("10kyfDCK4bc-nJbXpj7ePbW9BnFd9N_bN"),
       ans:D("1FQZvqRF3iXl2e-X36Fy36DnVTAibxnRr"), /* key: D("1FQZvqRF3iXl2e-X36Fy36DnVTAibxnRr") */
-      extras:[["EQAO Questions", D("155A8msqLtwmIetV14w36Zg12VQizv4ZH"), "eqao"],
+      extras:[["Core Concepts: Comparing Expressions", D("1Uj4w6lFy-WYxLDDfwZD0-3LBIGVdFtlk"), "skills"],
+              ["EQAO Questions", D("155A8msqLtwmIetV14w36Zg12VQizv4ZH"), "eqao"],
               ["Equivalent Expressions", "https://www.youtube.com/watch?v=eW7paVRISoU", "vid"]]},
     {d:20, iso:"2026-09-29", topic:"Adding and Subtracting Polynomials", num:"2.5",
       note:D("19imA5a3tuS9lH5C5yTrjcw6nFwfy0401"),
       ans:D("16OXJLgbERpuiEvOz15D2ilReb7gHMHwm"), /* key: D("16OXJLgbERpuiEvOz15D2ilReb7gHMHwm") */
-      extras:[["EQAO Questions", D("1b12y0ENTEIMPT1efb53iE0AaAxFXaGH8"), "eqao"],
+      extras:[["Core Concepts: Adding and Subtracting Expressions", D("1TtR5RUrqRgtS_QLDIixgZPQhYx_M0DQg"), "skills"],
+              ["EQAO Questions", D("1b12y0ENTEIMPT1efb53iE0AaAxFXaGH8"), "eqao"],
               ["Adding and Subtracting Polynomials", "https://www.youtube.com/watch?v=nJPPYdkU35E", "vid"]]},
     {d:21, iso:"2026-09-30", topic:"Current Topics  &  Fraction Operations", flag:"quiz",
       extras:[]},
     {d:22, iso:"2026-10-01", topic:"Powers with the Same Base", num:"2.6",
       note:D("1h1nUMYQcox_hIeJkAkn3HvW9C2PfzgDe"),
       ans:"", /* key: D("10hioQwgK-GMAJSRBha-ARXFUZcwW1nt1") */
-      extras:[["EQAO Questions", D("1TqP-1BG9SzbvTjPYsDkTAHAsV-arhvmL"), "eqao"],
+      extras:[["Core Concepts: Reading and Multiplying Powers", D("15mxE2_piyq54JpcFRmJ5qiOPZAtVo9Mo"), "skills"],
+              ["EQAO Questions", D("1TqP-1BG9SzbvTjPYsDkTAHAsV-arhvmL"), "eqao"],
               ["Multiplying and Dividing Powers", "https://www.youtube.com/watch?v=CZ5ne_mX5_I", "vid"]]},
     {d:23, iso:"2026-10-05", topic:"Powers of Powers", num:"2.7",
       note:D("1wfqKeWALwtVqYBUYSdfZiHkaoWx5cRHp"),
@@ -313,8 +322,8 @@ const COURSE = {
     {d:55, iso:"2026-11-19", topic:"One-Variable Data", num:"5.2",
       note:D("1cOt7LxQmpwLQnRGIzZOvBPX4pv-fYbf4"),
       ans:D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia"), /* key: D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia") */
-      extras:[["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
-              ["Skills Session: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "doc"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
+      extras:[["Core Concepts: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "skills"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
+              ["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
               ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"],
               ["Finding Quartiles: Odd Number of Values (6 min)", "https://www.youtube.com/watch?v=tdeg0gF-ZSI", "vid"],
               ["How to Make a Box Plot (7 min)", "https://www.youtube.com/watch?v=jurdqZEfbec", "vid"]]},
@@ -323,8 +332,8 @@ const COURSE = {
     {d:57, iso:"2026-11-24", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
       note:D("14HOEb02eKMcSETLHaKFglf92tfBWJGd4"),
       ans:D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8"), /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
-      extras:[["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
-              ["Skills Session: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "doc"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
+      extras:[["Core Concepts: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "skills"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
+              ["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
               ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"],
               ["Describing Correlation on a Scatter Plot (4 min)", "https://www.youtube.com/watch?v=AxyDalIvKIA", "vid"],
               ["Writing the Equation of a Line of Best Fit (3 min)", "https://www.youtube.com/watch?v=DmGLQkUm-4g", "vid"]]},
@@ -343,14 +352,14 @@ const COURSE = {
     {d:61, iso:"2026-11-30", topic:"Modelling: Creating the Model", num:"5.7",
       note:D("1TWfSPTi6hDrWHGKV04NmmopbX62CSG7E"),
       ans:"", /* key: D("1n1GGQp6QN9X3xqsCbZAFkWr5bh4CwT5y") */
-      extras:[["EQAO Questions", D("1uaVdKh2XcB959qHTh5DJibXwUFZoUy3G"), "eqao"],
-              ["Skills Session: Tenths and Staying Inside the Data", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "doc"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
+      extras:[["Core Concepts: Tenths and Staying Inside the Data (Parts 1 to 3)", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "skills"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
+              ["EQAO Questions", D("1uaVdKh2XcB959qHTh5DJibXwUFZoUy3G"), "eqao"],
               ["Math Modelling: Getting a Solution", "https://www.youtube.com/watch?v=wwck9hVjlQc", "vid"]]},
     {d:62, iso:"2026-12-01", topic:"Modelling: Assessing and Reporting", num:"5.8",
       note:D("1Azgj9ROLUcAHoMNuqWFziyuQduNYsJUW"),
       ans:"", /* key: D("1Y6DSsND1NzNXq6G051J9XSkblQKqALZ3") */
-      extras:[["EQAO Questions", D("1CZ22cxDbCmrNa32J0DgsdKxUdle-IDwS"), "eqao"],
-              ["Skills Session: Tenths and Staying Inside the Data", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "doc"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
+      extras:[["Core Concepts: Tenths and Staying Inside the Data (Parts 4 and 5)", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "skills"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
+              ["EQAO Questions", D("1CZ22cxDbCmrNa32J0DgsdKxUdle-IDwS"), "eqao"],
               ["Math Modelling: Analysis", "https://www.youtube.com/watch?v=EpnSdicc8hw", "vid"],
               ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"],
               ["Predictions Inside and Outside the Data (2 min)", "https://www.youtube.com/watch?v=bEANDlJkqcU", "vid"]]},
@@ -471,8 +480,8 @@ const COURSE = {
     {d:81, iso:"2027-01-11", topic:"Coding 6 · The Accumulator: Totals and Means", num:"5.4",
       note:D("1AwL5jN7xAUgYmS1O3LuQspMikBWjfe4c"),
       ans:"", /* key: D("1FUHwaaHKNRa_DMzuYNCMVRFVne9xMTUk") */
-      extras:[["EQAO Questions", D("1Uo9r8PLGSRtXJAmXXj-Uorq-GViSJTrk"), "eqao"],
-              ["Skills Session: Running Totals and Fair Shares", D("1_03hdTPAloKC2KS0cMFKHKmzVE6EpLN3"), "doc"], /* skills key: D("1ZVCXSX0Bh1dGtTDtPwH30F_fKS-Y4NFe") */
+      extras:[["Core Concepts: Running Totals and Fair Shares", D("1_03hdTPAloKC2KS0cMFKHKmzVE6EpLN3"), "skills"], /* skills key: D("1ZVCXSX0Bh1dGtTDtPwH30F_fKS-Y4NFe") */
+              ["EQAO Questions", D("1Uo9r8PLGSRtXJAmXXj-Uorq-GViSJTrk"), "eqao"],
               ["Keeping a Running Total", "https://www.youtube.com/watch?v=x8e_od727XQ", "vid"]]},
     {d:82, iso:"2027-01-12", topic:"Coding 7 · Comparing Two Financial Options", num:"7.6",
       note:D("12TwriVKgLLjpKdeg-RwNQOFOmPSOx9p7"),
