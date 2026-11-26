@@ -30,7 +30,7 @@
 
    To SAVE TIME: (Just change the message)
 
-   git add . && git commit -m "4.1 key add" && git push origin main
+   git add . && git commit -m "5.5 key add" && git push origin main
 
    ═══════════════════════════════════════════════════════════ */
 
@@ -324,7 +324,7 @@ const COURSE = {
               ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"]]},
     {d:58, iso:"2026-11-25", topic:"The Modelling Process: Understanding the Situation", num:"5.5",
       note:D("11H6ruRFRdrW0y46bSrdtNcTK661syXkP"),
-      ans:"", /* key: D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok") */
+      ans:D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok"), /* key: D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok") */
       extras:[["EQAO Questions", D("1sj77ZNBuOWOFsQ13_EDUUOC4Tebxsn-V"), "eqao"],
               ["What Is Math Modelling?", "https://www.youtube.com/watch?v=xHtsuOB-TPw", "vid"]]},
     {d:59, iso:"2026-11-26", topic:"Current Topics  &  y = mx + b Substitution", flag:"quiz",
