@@ -307,13 +307,17 @@ const COURSE = {
       note:D("15C7NDpK2ljXAHhfAfad6jfvkttf6m5zU"),
       ans:D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD"), /* key: D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD") */
       extras:[["EQAO Questions", D("1wRUQIOl-3DC4KxdkC9o0m5MjjiVX94zR"), "eqao"],
-              ["What Is Sampling?", "https://www.youtube.com/watch?v=qhzkCebkSWE", "vid"]]},
+              ["What Is Sampling?", "https://www.youtube.com/watch?v=qhzkCebkSWE", "vid"],
+              ["Census or Sample? Primary and Secondary Data (2 min)", "https://www.youtube.com/watch?v=539aLh8laAc", "vid"],
+              ["Canada's Census: Who Collects It and Why (2 min)", "https://www.youtube.com/watch?v=zUUi-J4c6_Y", "vid"]]},
     {d:55, iso:"2026-11-19", topic:"One-Variable Data", num:"5.2",
       note:D("1cOt7LxQmpwLQnRGIzZOvBPX4pv-fYbf4"),
       ans:D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia"), /* key: D("18HOGQ5ETrAMsPorA9BnB2UIKYm5R-Dia") */
       extras:[["EQAO Questions", D("1MvU-sI2Y5Qs-yW3sqL3twGLxVGJSgd6t"), "eqao"],
               ["Skills Session: Sorting and Finding the Middle", D("1mWkH6kMosBjDXmkkapy1EiCgSmyubL5y"), "doc"], /* skills key: D("1Gbuwt8ghvWcHRF-LwbtTU5yrZzPvZQT6") */
-              ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"]]},
+              ["Mean, Median, Mode and Range", "https://www.youtube.com/watch?v=e3uY2LraXts", "vid"],
+              ["Finding Quartiles: Odd Number of Values (6 min)", "https://www.youtube.com/watch?v=tdeg0gF-ZSI", "vid"],
+              ["How to Make a Box Plot (7 min)", "https://www.youtube.com/watch?v=jurdqZEfbec", "vid"]]},
     {d:56, iso:"2026-11-20", topic:"Grade 9 Afternoon Event · No Class",
       extras:[]},
     {d:57, iso:"2026-11-24", topic:"Two-Variable Data: Scatter Plots and Lines of Best Fit", num:"5.3",
@@ -321,7 +325,9 @@ const COURSE = {
       ans:D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8"), /* key: D("1cWwE_jPx3Eeu-BW0lqvwG9qNaTiL_xQ8") */
       extras:[["EQAO Questions", D("1J_yGuMA5o0t8bIoAisXEi9rNWsuFt6S0"), "eqao"],
               ["Skills Session: Plotting Points and Reading Lines", D("1yC5gFjzoTymDS-Zt0qIEp-AmhgTfepvp"), "doc"], /* skills key: D("17gA0Tc_IE32dIRd4E8pJFUCrFJGWvHI8") */
-              ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"]]},
+              ["Scatter Plots and the Line of Best Fit", "https://www.youtube.com/watch?v=e18KM681cmg", "vid"],
+              ["Describing Correlation on a Scatter Plot (4 min)", "https://www.youtube.com/watch?v=AxyDalIvKIA", "vid"],
+              ["Writing the Equation of a Line of Best Fit (3 min)", "https://www.youtube.com/watch?v=DmGLQkUm-4g", "vid"]]},
     {d:58, iso:"2026-11-25", topic:"The Modelling Process: Understanding the Situation", num:"5.5",
       note:D("11H6ruRFRdrW0y46bSrdtNcTK661syXkP"),
       ans:D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok"), /* key: D("1JEVRL9ISpPKn1XW9D1i8MxV1gdlvqNok") */
@@ -346,7 +352,8 @@ const COURSE = {
       extras:[["EQAO Questions", D("1CZ22cxDbCmrNa32J0DgsdKxUdle-IDwS"), "eqao"],
               ["Skills Session: Tenths and Staying Inside the Data", D("1FBG8q-ayRCTszLPdI-qQxC3bhv5kZxZ9"), "doc"], /* skills key: D("1N8liw40saWdX74d_SraMdh1XheeChgyU") */
               ["Math Modelling: Analysis", "https://www.youtube.com/watch?v=EpnSdicc8hw", "vid"],
-              ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"]]},
+              ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"],
+              ["Predictions Inside and Outside the Data (2 min)", "https://www.youtube.com/watch?v=bEANDlJkqcU", "vid"]]},
     {d:63, iso:"2026-12-02", topic:"Modelling Project · Presentations",
       extras:[["Unit 5 Review", D("1K52-T-tfDsgCwKElKvEO4hlbl_l34kPo"), "doc"],
               ["Answers", D("1uoRNLs19D7INCnZ-_IovXLHxLIjfpyBD"), "ans"]]},
@@ -358,13 +365,17 @@ const COURSE = {
       note:D("1XmCCycwrpOPPmYQd2gpvzhJtTLrnFumv"),
       ans:"", /* key: D("1ASeEqPw9OQJ_oNbsaZfB8lbk9Lbqt1pK") */
       extras:[["EQAO Questions", D("14f2Q3fPZFl4Kb9kj6homCfbQfqPhSeiX"), "eqao"],
-              ["Converting Between Metric and Imperial", "https://www.youtube.com/watch?v=8SHTjGkbDp0", "vid"]]},
+              ["Converting Between Metric and Imperial", "https://www.youtube.com/watch?v=8SHTjGkbDp0", "vid"],
+              ["Converting mm, cm, m and km (6 min)", "https://www.youtube.com/watch?v=kOJFSH_Bn9U", "vid"],
+              ["Converting cm² to m² and Back (4 min)", "https://www.youtube.com/watch?v=E1JpENSBQjA", "vid"]]},
     {d:65, iso:"2026-12-04", topic:"Perimeter and Area in 2D · Composite Shapes", num:"6.2",
       note:D("1vWzbHOwTAszhzTwWUtNezfrmUA9h4XBM"),
       ans:"", /* key: D("1AIQlklUMG1bIC5srz6yiACVqdjYc2x1a") */
       extras:[["EQAO Questions", D("1EMImB44s9SGBk9WoI13FCtgE1ouwSDVH"), "eqao"],
               ["Perimeter and Area of a Composite Shape", "https://www.youtube.com/watch?v=rBpsauKXPfs", "vid"],
-              ["Area of a Shaded Region", "https://www.youtube.com/watch?v=YopxzELAqkA", "vid"]]},
+              ["Area of a Shaded Region", "https://www.youtube.com/watch?v=YopxzELAqkA", "vid"],
+              ["Circumference and Area of a Circle (8 min)", "https://www.youtube.com/watch?v=O-cawByg2aA", "vid"],
+              ["Composite Shapes: Adding and Cutting Out Pieces (13 min)", "https://www.youtube.com/watch?v=e_eMh19jKIQ", "vid"]]},
     {d:66, iso:"2026-12-07", topic:"Designing to a Constraint", num:"6.3",
       note:D("1O1h7vkYNJmLdxJnVRqKKtG-gQTCrf51u"),
       ans:"", /* key: D("1wlB6QzcvJQTHaRZ2IRL8rFbrPVH_82RW") */
@@ -375,30 +386,43 @@ const COURSE = {
       note:D("1aL3ugZjZhYwb5RUVhUZHRpwXkhI-DweD"),
       ans:"", /* key: D("1b3RIQ4yhGBGWpZRcSsekZ8M1qZEnA2x1") */
       extras:[["EQAO Questions", D("1EszQfJVxrODyrc41N74z5mGE7kLaJHqK"), "eqao"],
-              ["What Is the Pythagorean Theorem?", "https://www.youtube.com/watch?v=oOhq1T80LEo", "vid"]]},
+              ["What Is the Pythagorean Theorem?", "https://www.youtube.com/watch?v=oOhq1T80LEo", "vid"],
+              ["The Pythagorean Relationship (13 min)", "https://www.youtube.com/watch?v=WqhlG3Vakw8", "vid"],
+              ["Finding a Missing Leg (8 min)", "https://www.youtube.com/watch?v=Z0AF2UHLVJ0", "vid"]]},
     {d:68, iso:"2026-12-09", topic:"Current Topics  &  Solving Equations and Proportional Reasoning", flag:"quiz",
       extras:[]},
     {d:69, iso:"2026-12-10", topic:"Angle Relationships: Interior and Exterior Angles", num:"6.5",
       note:D("1IeAm3ozqiC9i_6WEfJ_jAwK-X5FTzdkP"),
       ans:"", /* key: D("1Oe7HCEuugO6evFa1-4L3VwYon6s189a7") */
       extras:[["EQAO Questions", D("1RZdQfxpVUqMGx4kMvyaASxAsR2tlGW9K"), "eqao"],
+              ["Opposite, Supplementary and Complementary Angles (4 min)", "https://www.youtube.com/watch?v=I0aQCz4IVYE", "vid"],
+              ["Parallel Lines: Corresponding, Alternate and Co-interior Angles (3 min)", "https://www.youtube.com/watch?v=3lD5jYbr6Eo", "vid"],
+              ["Why Exterior Angles Add to 360° (3 min)", "https://www.youtube.com/watch?v=5dZoX2z1nYk", "vid"],
               ["Interior and Exterior Angles", "https://www.youtube.com/watch?v=OEzEo4XqzJQ", "vid"],
               ["Angle Theorems: Top 10", "https://www.youtube.com/watch?v=Bq1QyT-HZrU", "vid"]]},
     {d:70, iso:"2026-12-11", topic:"Triangle and Circle Relationships", num:"6.6",
       note:D("1fHOfOGDGqvf3ng51W4hvfG9YzuQsnHGg"),
       ans:"", /* key: D("1nGCYxRZl8ptdESr8_pP5lmUU8OcpirAR") */
       extras:[["EQAO Questions", D("11nd0y9wpaoVUgowQUb_9V1F-2eZOk28r"), "eqao"],
+              ["Can These Sides Make a Triangle? (1 min)", "https://www.youtube.com/watch?v=HPcX0D0uinU", "vid"],
+              ["Angles in Triangles and Circles (9 min)", "https://www.youtube.com/watch?v=ocWI3f9ZhF4", "vid"],
               ["Circle Theorems", "https://www.youtube.com/watch?v=dBIlCD_JF9Q", "vid"]]},
     {d:71, iso:"2026-12-14", topic:"Volume: Prisms, Pyramids, Cylinders and Cones", num:"6.7",
       note:D("1uxj_gQMTKP86J2iZEUvmpk_kKbOwzTS5"),
       ans:"", /* key: D("116yX2npCafLVe9ZnypJpm5-fXjtuE9HO") */
       extras:[["EQAO Questions", D("1EoDIANXOfGErgrbvN_ubuirtG3rLGDlL"), "eqao"],
-              ["How Many Cones Fill a Cylinder?", "https://www.youtube.com/watch?v=Yr53Ji4SZDg", "vid"]]},
+              ["How Many Cones Fill a Cylinder?", "https://www.youtube.com/watch?v=Yr53Ji4SZDg", "vid"],
+              ["How Many Pyramids Fill the Prism? (40 sec)", "https://www.youtube.com/watch?v=0yehGuUI-n8", "vid"],
+              ["Volume of a Cylinder (4 min)", "https://www.youtube.com/watch?v=fGVlL47TKAw", "vid"],
+              ["Volume of a Pyramid (8 min)", "https://www.youtube.com/watch?v=JQD__LQTrYA", "vid"]]},
     {d:72, iso:"2026-12-15", topic:"Calculations in 3D · Surface Area", num:"6.8",
       note:D("1lopc-UuhwL2z5umboYBGyJOAhnoVVYPH"),
       ans:"", /* key: D("1lSKL_UHdtOHtuDXNrqNDWQjCTxa4pOMb") */
       extras:[["EQAO Questions", D("1cAEx77sg7KJJ6n5_B1gQsf7D-3aXjIb5"), "eqao"],
-              ["Volumes of Composite Solids", "https://www.youtube.com/watch?v=I4VGICORQLE", "vid"]]},
+              ["Volumes of Composite Solids", "https://www.youtube.com/watch?v=I4VGICORQLE", "vid"],
+              ["Surface Area from a Net (4 min)", "https://www.youtube.com/watch?v=mtMNvnm71Z0", "vid"],
+              ["Surface Area of a Cylinder (6 min)", "https://www.youtube.com/watch?v=dNDbRbHNXFQ", "vid"],
+              ["Surface Area of a Square Pyramid (9 min)", "https://www.youtube.com/watch?v=4s5klzj3248", "vid"]]},
     {d:73, iso:"2026-12-16", topic:"Review", noteLabel:"Unit 6 Review",
       note:D("1Xhq1vStXAjJ3vGcJavmmq_kNrHHEE44U"),
       ans:"", /* key: D("1Q7pkAZmzH7P4v-1xT5EidVTESOXk7Wap") */
@@ -415,17 +439,21 @@ const COURSE = {
       note:D("1x7v8en0QFX1v6K79KOz8hkGy1GVX22jJ"),
       ans:"", /* key: D("1J0ks2sFtvcGpplHpEcKEe6y2j-Ra1J0I") */
       extras:[["EQAO Questions", D("19rpctfn9ReSTKnaPUaH3BQIWMYqhQP7L"), "eqao"],
-              ["Needs vs Wants", "https://www.youtube.com/watch?v=Wa8kYJV68LM", "vid"]]},
+              ["Needs vs Wants", "https://www.youtube.com/watch?v=Wa8kYJV68LM", "vid"],
+              ["Gross Pay and Net Pay in Canada (7 min)", "https://www.youtube.com/watch?v=XuBM7tzQdAY", "vid"]]},
     {d:77, iso:"2027-01-05", topic:"Budgeting", num:"7.2",
       note:D("1ew2kujGTKR1oO6RM0Y_PqqiJgW20TCs_"),
       ans:"", /* key: D("1hh6kJn8pho-wXNif-k3fJ8XimpaVuTQo") */
       extras:[["EQAO Questions", D("13HqJ0PnpEHYI65oDLhNmrw986SQl4VcZ"), "eqao"],
-              ["Making a Simple Budget", "https://www.youtube.com/watch?v=mt115A05q6Q", "vid"]]},
+              ["Making a Simple Budget", "https://www.youtube.com/watch?v=mt115A05q6Q", "vid"],
+              ["Making a Budget: Surplus or Deficit? (7 min)", "https://www.youtube.com/watch?v=buSi31MN9lQ", "vid"]]},
     {d:78, iso:"2027-01-06", topic:"Percent in Financial Contexts", num:"7.3",
       note:D("1F6Nwo72qIZqAemWXv8Ui8U8KXwPiX_Ck"),
       ans:"", /* key: D("1d1WWiDFPDUlwKPWQ2oSBXSL3GLYQwq3w") */
       extras:[["EQAO Questions", D("1En384h33RK3GrQVP787QiB6uagP0r-i_"), "eqao"],
-              ["Percent of Change", "https://www.youtube.com/watch?v=jAcDJDjQk2g", "vid"]]},
+              ["Percent of Change", "https://www.youtube.com/watch?v=jAcDJDjQk2g", "vid"],
+              ["Finding a Percent of a Number (8 min)", "https://www.youtube.com/watch?v=rR95Cbcjzus", "vid"],
+              ["Finding a Discount and the Sale Price (7 min)", "https://www.youtube.com/watch?v=5qxX222sLtE", "vid"]]},
     {d:79, iso:"2027-01-07", topic:"Appreciation and Depreciation", num:"7.4",
       note:D("1rNb24_-cVY4Z3tDivrF-IXWWPKvI6LjH"),
       ans:"", /* key: D("1Vh2ccdUfPG_RUTzsj3c8wGp9UGTGAw-P") */
@@ -436,7 +464,10 @@ const COURSE = {
       ans:"", /* key: D("1PpOfNlg4-BrJsmnsNCP0FpTGaUB_MHsW") */
       extras:[["EQAO Questions", D("13XbGJ0rRDoRr1Dt4Q0dMgD4yF2ktqcnU"), "eqao"],
               ["Simple vs Compound Interest", "https://www.youtube.com/watch?v=lMVwYoiiV0w", "vid"],
-              ["How Principal and Interest Work in Loan Payments", "https://www.youtube.com/watch?v=JvEOX9DcZn8", "vid"]]},
+              ["How Principal and Interest Work in Loan Payments", "https://www.youtube.com/watch?v=JvEOX9DcZn8", "vid"],
+              ["Simple Interest: I = Prt (10 min)", "https://www.youtube.com/watch?v=Lv5FbN517sY", "vid"],
+              ["Simple vs Compound Interest, Year by Year (10 min)", "https://www.youtube.com/watch?v=GtaoP0skPWc", "vid"],
+              ["Down Payments (6 min)", "https://www.youtube.com/watch?v=M3IgA77f6IE", "vid"]]},
     {d:81, iso:"2027-01-11", topic:"Coding 6 · The Accumulator: Totals and Means", num:"5.4",
       note:D("1AwL5jN7xAUgYmS1O3LuQspMikBWjfe4c"),
       ans:"", /* key: D("1FUHwaaHKNRa_DMzuYNCMVRFVne9xMTUk") */
@@ -462,15 +493,15 @@ const COURSE = {
     {d:86, iso:"2027-01-18", topic:"EQAO Review · Number and Algebra", noteLabel:"EQAO Review",
       note:D("1QSHaugWfZk7jjGAUSE-2crcy0EFqZ1Sy"),
       ans:"", /* key: D("17jDNsmnrtSe_JqL4wzFu3S4IivNi7569") */
-      extras:[]},
+      extras:[["Grade 9 Review: Exponents, Algebra and Equations (37 min)", "https://www.youtube.com/watch?v=_lxccBUcNaY", "vid"]]},
     {d:87, iso:"2027-01-19", topic:"EQAO Review · Relations and Data", noteLabel:"EQAO Review",
       note:D("1Am3umpB9vpp4llqiLAN7QKUT9UlNwMVF"),
       ans:"", /* key: D("1fPawx_Cf4UcHWM0Kc9qIA2XF7tCTHL-q") */
-      extras:[]},
+      extras:[["Grade 9 Review: Scatter Plots and Linear Relations (32 min)", "https://www.youtube.com/watch?v=IaoajyzGnTw", "vid"]]},
     {d:88, iso:"2027-01-20", topic:"EQAO Review · Geometry, Measurement and Finance", noteLabel:"EQAO Review",
       note:D("1m5wH75jDczwibOtD8HbS6jj0JZDKaiR6"),
       ans:"", /* key: D("1HwZMX73gQJtIxgIfSZ7yLbKW4uguIJj7") */
-      extras:[]},
+      extras:[["Grade 9 Review: Angles, Pythagoras and Volume (10 min)", "https://www.youtube.com/watch?v=jPWXzRyVxIg", "vid"]]},
     {d:89, iso:"2027-01-21", topic:"EQAO Format & Timed Practice · Last Day", noteLabel:"Format Practice",
       note:D("1Ks-8WN8D0qwN4SVeeyrK4QDhmkUSVxYd"),
       ans:"", /* key: D("1v1jy0TuDYLLQy9lRU8B5mzfiJJejB_4w") */
