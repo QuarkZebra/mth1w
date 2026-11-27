@@ -250,6 +250,8 @@ header .sub{color:var(--t3);font-size:.88rem;margin-top:.35rem}
 .dlink.vid{color:var(--vid);font-size:.78rem}
 .dlink.doc{color:var(--t2);font-size:.78rem}
 .dlink.skills{color:var(--skills);font-size:.78rem;font-weight:600}
+/* Unit Summary: an extras entry of kind "summary". Teal link with a Summary pill, and a pill on the unit header. */
+.utag.sum{background:var(--skills);color:#fff;border-color:transparent;font-weight:700}
 .dlink:hover .ico.layers{transform:translateY(-1px)}
 .dlink.eqao{color:var(--eqao);font-size:.78rem;font-weight:600}
 
@@ -484,6 +486,7 @@ function extraLink(e){
   if(kind==="vid")return live(t,url,"vid","play",false);
   if(kind==="ans")return live(t,url,"ans","check",true);
   if(kind==="skills")return live(t,url,"skills","layers",false);
+  if(kind==="summary")return `<div class="xitem">${live(t,url,"skills","layers",false)}<span class="utag sum">Summary</span></div>`;
   if(kind==="eqao")return live(t,url,"eqao","pencil",false);
   return live(t,url,"doc","arrow",false);
 }
@@ -585,7 +588,7 @@ function render(){
         <span class="utitle">${u.name}</span>
         <span class="urange">${unitRange(u)}</span>
         <span class="umeta">${unitMeta(u)}</span>
-        ${freshTag(u)}${unitTag(u,i)}
+        ${u.days.some(d=>(d.extras||[]).some(e=>e&&e[2]==="summary"))?'<span class="utag sum">Summary</span>':''}${freshTag(u)}${unitTag(u,i)}
         <svg class="chev" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
       <div class="ubody"><div class="ubody-inner">
@@ -673,7 +676,7 @@ function renderHero(){
   h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();jump()}});
 }
 
-const LEGEND_HTML=`<div class="ht">What the links mean</div><div class="hi"><span class="dlink note">${ico("arrow")}<span class="lt">1.4 Blank Note &amp; Practice Problems</span></span><small>the day's note</small></div><div class="hi"><span class="dlink ans">${ico("check")}<span class="lt">Answers</span></span><small>posted after class · do the practice first</small></div><div class="hi"><span class="dlink vid">${ico("play")}<span class="lt">Video</span></span></div><div class="hi"><span class="dlink eqao">${ico("pencil")}<span class="lt">EQAO Questions</span></span><small>released by EQAO from past tests</small></div><div class="hi"><span class="dlink doc">${ico("arrow")}<span class="lt">Worksheet</span></span><span class="xans">${ico("check")}Answers</span><small>a resource with its own answers</small></div><div class="hi"><span class="dlink skills">${ico("layers")}<span class="lt">Prerequisite Skills</span></span><small>earlier-course skills a unit leans on · answers on the sheet</small></div><div class="hi"><span class="dlink pend">${ico("arrow")}<span class="lt">Greyed out</span></span><small>coming soon</small></div><div class="hi"><span class="newp">New</span><small>answers released in the last few days</small></div><div class="hi"><span class="swatch"></span><small>today's lesson</small></div>`;
+const LEGEND_HTML=`<div class="ht">What the links mean</div><div class="hi"><span class="dlink note">${ico("arrow")}<span class="lt">1.4 Blank Note &amp; Practice Problems</span></span><small>the day's note</small></div><div class="hi"><span class="dlink ans">${ico("check")}<span class="lt">Answers</span></span><small>posted after class · do the practice first</small></div><div class="hi"><span class="dlink vid">${ico("play")}<span class="lt">Video</span></span></div><div class="hi"><span class="dlink eqao">${ico("pencil")}<span class="lt">EQAO Questions</span></span><small>released by EQAO from past tests</small></div><div class="hi"><span class="dlink doc">${ico("arrow")}<span class="lt">Worksheet</span></span><span class="xans">${ico("check")}Answers</span><small>a resource with its own answers</small></div><div class="hi"><span class="dlink skills">${ico("layers")}<span class="lt">Core Concepts / Review</span></span><small>core concepts sheets, unit summaries and core concepts reviews</small></div><div class="hi"><span class="dlink pend">${ico("arrow")}<span class="lt">Greyed out</span></span><small>coming soon</small></div><div class="hi"><span class="newp">New</span><small>answers released in the last few days</small></div><div class="hi"><span class="swatch"></span><small>today's lesson</small></div>`;
 /* ══════════ Controls ══════════ */
 document.getElementById("expBtn").addEventListener("click",function(){
   const units=[...document.querySelectorAll(".unit")];

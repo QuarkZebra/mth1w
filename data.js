@@ -364,8 +364,8 @@ const COURSE = {
               ["Math Modelling: Reporting the Results", "https://www.youtube.com/watch?v=Qfq5TZL7lx4", "vid"],
               ["Predictions Inside and Outside the Data (2 min)", "https://www.youtube.com/watch?v=bEANDlJkqcU", "vid"]]},
     {d:63, iso:"2026-12-02", topic:"Modelling Project · Presentations",
-      extras:[/* summary (built 27 Nov 2026; index.html needs the MHF4U "summary" kind ported before this goes live): ["Unit 5 Summary", D("19ye_Srt0_kZtIHCwYHgpQhoJPnmF6T9N"), "summary"], */
-              /* core: ["Core Concepts Review", D("1HX5TTyKMmE3qVj2Lo41gtpZHkQ8PohaJ"), "skills"], ["Solutions", D("1allGUQxEKLyeq_h8smQ2GyIl0HIPpkxT"), "ans"], */
+      extras:[["Unit 5 Summary", D("19ye_Srt0_kZtIHCwYHgpQhoJPnmF6T9N"), "summary"],
+              ["Core Concepts Review", D("1HX5TTyKMmE3qVj2Lo41gtpZHkQ8PohaJ"), "skills"], ["Solutions", D("1allGUQxEKLyeq_h8smQ2GyIl0HIPpkxT"), "ans"],
               ["Unit 5 Review", D("1K52-T-tfDsgCwKElKvEO4hlbl_l34kPo"), "doc"],
               ["Answers", D("1uoRNLs19D7INCnZ-_IovXLHxLIjfpyBD"), "ans"]]},
   ]},
