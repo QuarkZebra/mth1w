@@ -346,7 +346,7 @@ const COURSE = {
       extras:[]},
     {d:60, iso:"2026-11-27", topic:"Modelling: The Plan and the Data", num:"5.6",
       note:D("1VBPOccSQ7Xb3BuE1kSo2fTDTQgdp9kq-"),
-      ans:"", /* key: D("16GIgag8OmrkbRpY7u4hLJ2X4Ssq9GAN4") */
+      ans:D("16GIgag8OmrkbRpY7u4hLJ2X4Ssq9GAN4"), /* key: D("16GIgag8OmrkbRpY7u4hLJ2X4Ssq9GAN4") */
       extras:[["EQAO Questions", D("1hFcEY9BaH8IM1KVkihGB0uuUhncdF_QM"), "eqao"],
               ["Math Modelling: Defining Variables", "https://www.youtube.com/watch?v=oQTrwJWTc4M", "vid"]]},
     {d:61, iso:"2026-11-30", topic:"Modelling: Creating the Model", num:"5.7",
