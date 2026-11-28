@@ -315,7 +315,8 @@ const COURSE = {
     {d:54, iso:"2026-11-18", topic:"How Data Is Collected", num:"5.1",
       note:D("15C7NDpK2ljXAHhfAfad6jfvkttf6m5zU"),
       ans:D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD"), /* key: D("1zJrmM3JmcotZfHB7M2nflDarrYzddoZD") */
-      extras:[["EQAO Questions", D("1wRUQIOl-3DC4KxdkC9o0m5MjjiVX94zR"), "eqao"],
+      extras:[["Prerequisite Skills", D("1b36Vg0tG3uk2jf876SWA2s-1qvu2ATc3"), "skills"],
+              ["EQAO Questions", D("1wRUQIOl-3DC4KxdkC9o0m5MjjiVX94zR"), "eqao"],
               ["What Is Sampling?", "https://www.youtube.com/watch?v=qhzkCebkSWE", "vid"],
               ["Census or Sample? Primary and Secondary Data (2 min)", "https://www.youtube.com/watch?v=539aLh8laAc", "vid"],
               ["Canada's Census: Who Collects It and Why (2 min)", "https://www.youtube.com/watch?v=zUUi-J4c6_Y", "vid"]]},
